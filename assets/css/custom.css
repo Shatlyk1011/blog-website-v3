@@ -1,0 +1,14 @@
+:root {
+  --content: 780px;
+  --feed-measure: 760px;
+  --feed-cover-ratio: 16 / 7;
+}
+
+.hero-line {
+  max-width: 900px;
+}
+
+.a-cover img {
+  border-radius: var(--radius);
+}
+

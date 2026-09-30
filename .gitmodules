@@ -1,0 +1,3 @@
+[submodule "themes/taiga"]
+	path = themes/taiga
+	url = https://github.com/justskiv/taiga.git

@@ -1,0 +1,141 @@
+baseURL = "https://blog.shatlykabdullayev.com/"
+title = "Shatlyk Abdullayev"
+theme = "taiga"
+languageCode = "en-US"
+defaultContentLanguage = "en"
+enableRobotsTXT = true
+timeZone = "Asia/Ashgabat"
+ignoreLogs = ["seo-hint"]
+
+[contentTypes]
+  [contentTypes."text/markdown"]
+
+[taxonomies]
+  tag = "tags"
+
+[[menus.main]]
+  name = "Articles"
+  url = "/#feed"
+  weight = 10
+
+[[menus.main]]
+  name = "Tags"
+  pageRef = "/tags"
+  weight = 20
+
+[[menus.main]]
+  name = "About"
+  pageRef = "/about"
+  weight = 30
+
+[[menus.main]]
+  name = "Links"
+  pageRef = "/links"
+  weight = 40
+
+[[menus.footer]]
+  name = "articles"
+  url = "/#feed"
+  weight = 10
+
+[[menus.footer]]
+  name = "tags"
+  pageRef = "/tags"
+  weight = 20
+
+[[menus.footer]]
+  name = "about"
+  pageRef = "/about"
+  weight = 30
+
+[[menus.footer]]
+  name = "links"
+  pageRef = "/links"
+  weight = 40
+
+[[menus.footer]]
+  name = "github"
+  url = "https://github.com/shatlyk1011"
+  weight = 50
+
+[[menus.footer]]
+  name = "linkedin"
+  url = "https://www.linkedin.com/in/shatlyk1011"
+  weight = 60
+
+[params]
+  heroLine = "Notes on frontend engineering, system design, and the ideas I am thinking through"
+  heroSat = "· written by Shatlyk Abdullayev"
+  footerTag = "Engineering and ideas"
+  footerCopy = "Shatlyk Abdullayev"
+  author = "Shatlyk Abdullayev"
+  authorURL = "/about/"
+  authorSameAs = [
+    "https://github.com/shatlyk1011",
+    "https://www.linkedin.com/in/shatlyk1011",
+    "https://www.youtube.com/@devbyshat"
+  ]
+  extraGuideSections = ["articles"]
+  feedInitial = 8
+  defaultTheme = "obsidian"
+  linkcheck = "error"
+  seo.lint = "warn"
+
+  [params.brand]
+    name = "shatlyk"
+    tld = ".blog"
+
+  [params.home]
+    hero = "wordmark"
+    grid = "fade"
+    rubricCards = "naked"
+    feedPreview = "description"
+    feedCover = "banner"
+
+  [params.article]
+    cover = true
+
+  [params.ogImages]
+    enable = true
+    style = "taiga"
+
+  [params.rss]
+    fullContent = true
+
+  [params.social]
+    twitter = "@Shatlyk1011"
+    github = "https://github.com/shatlyk1011"
+
+  [params.analytics]
+    clarityId = ""
+    googleAnalyticsId = ""
+    googleTagManagerId = ""
+
+[markup]
+  [markup.goldmark.renderer]
+    unsafe = true
+  [markup.goldmark.parser.attribute]
+    title = true
+    block = true
+  [markup.goldmark.extensions.typographer]
+    disable = true
+  [markup.highlight]
+    noClasses = false
+    codeFences = true
+    guessSyntax = false
+  [markup.tableOfContents]
+    startLevel = 2
+    endLevel = 3
+
+[[cascade]]
+  [cascade.build]
+    render = "never"
+    list = "never"
+  [cascade._target]
+    kind = "term"
+
+[[cascade]]
+  [cascade.build]
+    publishResources = false
+  [cascade._target]
+    kind = "page"
