@@ -1,5 +1,31 @@
-{{- with site.Params.analytics.googleTagManagerId }}
-<noscript><iframe src="https://www.googletagmanager.com/ns.html?id={{ . }}"
-height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-{{- end }}
+{{- $counterURL := site.Params.viewCounter.url | default "" -}}
+{{- if $counterURL -}}
+<script data-view-counter-url="{{ $counterURL }}">
+  (() => {
+    const counter = document.querySelector('[data-view-counter]')
+    if (!counter) return
 
+    const articleId = counter.dataset.viewCounterId
+    const baseURL = document.currentScript.dataset.viewCounterUrl.replace(/\/$/, '')
+    const endpoint = `${baseURL}/v1/views/${encodeURIComponent(articleId)}`
+    const sessionKey = `article-viewed:${articleId}`
+    const hasViewedInSession = sessionStorage.getItem(sessionKey) === 'true'
+
+    if (!hasViewedInSession) sessionStorage.setItem(sessionKey, 'true')
+
+    fetch(endpoint, { method: hasViewedInSession ? 'GET' : 'POST' })
+      .then((response) => {
+        if (!response.ok) throw new Error('View counter request failed')
+        return response.json()
+      })
+      .then(({ views }) => {
+        const value = counter.querySelector('[data-view-counter-value]')
+        value.textContent = new Intl.NumberFormat('en-US').format(views)
+        counter.hidden = false
+      })
+      .catch(() => {
+        // View counting must not affect reading when the Worker is unavailable.
+      })
+  })()
+</script>
+{{- end -}}

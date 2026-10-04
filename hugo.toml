@@ -90,10 +90,14 @@ ignoreLogs = ["seo-hint"]
     grid = "fade"
     rubricCards = "naked"
     feedPreview = "description"
-    feedCover = "banner"
+    feedCover = ""
 
   [params.article]
     cover = true
+
+  [params.viewCounter]
+    # Set this after deploying worker/ to Cloudflare, e.g. https://blog-view-counter.<account>.workers.dev
+    url = "https://blog-view-counter.gj-wp.workers.dev"
 
   [params.ogImages]
     enable = true

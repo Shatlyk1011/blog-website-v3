@@ -1,0 +1,17 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "blog-view-counter",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-10-02",
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "blog-view-counter",
+      "database_id": "8d972acc-59d8-4320-83ba-391fea3363cb",
+      "migrations_dir": "migrations"
+    }
+  ],
+  "vars": {
+    "ALLOWED_ORIGINS": "https://blog.shatlykabdullayev.com,http://localhost:1313"
+  }
+}
