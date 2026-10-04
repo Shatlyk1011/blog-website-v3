@@ -1,7 +1,7 @@
 baseURL = "https://blog.shatlykabdullayev.com/"
 title = "Shatlyk Abdullayev"
 theme = "taiga"
-languageCode = "en-US"
+locale = "en-US"
 defaultContentLanguage = "en"
 enableRobotsTXT = true
 timeZone = "Asia/Ashgabat"
@@ -135,11 +135,11 @@ ignoreLogs = ["seo-hint"]
   [cascade.build]
     render = "never"
     list = "never"
-  [cascade._target]
+  [cascade.target]
     kind = "term"
 
 [[cascade]]
   [cascade.build]
     publishResources = false
-  [cascade._target]
+  [cascade.target]
     kind = "page"
