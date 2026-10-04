@@ -10,6 +10,13 @@ ignoreLogs = ["seo-hint"]
 [contentTypes]
   [contentTypes."text/markdown"]
 
+[outputs]
+  home = ["HTML", "RSS"]
+  section = ["HTML", "RSS"]
+  taxonomy = ["HTML", "RSS"]
+  term = ["HTML", "RSS"]
+  page = ["HTML"]
+
 [taxonomies]
   tag = "tags"
 
