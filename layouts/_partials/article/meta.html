@@ -1,0 +1,17 @@
+{{- $ver := .Params.version | default site.Params.versionDefault -}}
+<div class="meta">
+{{- with $ver }}
+<span class="tag">{{ i18n "meta_tested_on" }} <b>{{ . }}</b>{{ with $.Params.arch }} · {{ . }}{{ end }}</span>
+{{- end }}
+<span class="tag">~<b>{{ .Params.mins | default (partial "article/reading-time.html" .) }} {{ i18n "mins_abbr" }}</b></span>
+<span class="tag tag-quiet">{{ i18n "words" .WordCount }}</span>
+{{- with .Params.interactive }}
+<span class="tag"><b>{{ $.Params.interactive_label | default (i18n "meta_interactive") }}:</b> {{ . }}</span>
+{{- end }}
+{{- $counterURL := site.Params.viewCounter.url | default "" }}
+{{- if and $counterURL .File }}
+<span class="tag" data-view-counter data-view-counter-id="article-{{ .File.UniqueID }}" hidden>
+  <span data-view-counter-value></span> views
+</span>
+{{- end }}
+</div>

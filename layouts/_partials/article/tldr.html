@@ -1,0 +1,18 @@
+{{- /* Optional article front matter:
+       tldr: "A compact summary shown directly beneath the cover image."
+
+       Render it as Markdown so an author can add links or emphasis without
+       putting presentation markup in front matter. */ -}}
+{{- with .Params.tldr }}
+<aside class="tldr" aria-labelledby="article-tldr-title">
+  <div class="tldr-header">
+    <span class="tldr-icon" aria-hidden="true">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round">
+        <path d="M5 6h14M5 12h10M5 18h6" />
+      </svg>
+    </span>
+    <span class="tldr-label" id="article-tldr-title">TL;DR</span>
+  </div>
+  <div class="tldr-content">{{ $.RenderString (dict "display" "block") . }}</div>
+</aside>
+{{- end }}
