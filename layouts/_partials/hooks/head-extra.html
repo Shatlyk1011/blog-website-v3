@@ -3,3 +3,28 @@
 <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
 <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
+{{- with site.Params.author }}
+<meta name="author" content="{{ . }}">
+{{- end }}
+{{- if .IsHome }}
+  {{- $authorURL := absURL (site.Params.authorURL | default "/about/") -}}
+  {{- $personID := printf "%s#person" $authorURL -}}
+  {{- $person := dict
+    "@type" "Person"
+    "@id" $personID
+    "name" (site.Params.author | default site.Title)
+    "url" $authorURL
+    "image" (absURL "/static/seo/profile.png")
+    "jobTitle" "Software Engineer"
+    "knowsAbout" (slice "Frontend engineering" "System design" "Web performance" "Software architecture") -}}
+  {{- with site.Params.authorSameAs }}{{ $person = merge $person (dict "sameAs" .) }}{{ end -}}
+  {{- $homePage := dict
+    "@type" "WebPage"
+    "@id" (printf "%s#webpage" .Permalink)
+    "url" .Permalink
+    "name" .Title
+    "description" .Description
+    "author" (dict "@id" $personID) -}}
+  {{- $authorSchema := dict "@context" "https://schema.org" "@graph" (slice $person $homePage) -}}
+<script type="application/ld+json">{{ $authorSchema | jsonify | safeJS }}</script>
+{{- end }}
