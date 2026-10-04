@@ -5,11 +5,12 @@ date: "2026-08-03T12:00:00Z"
 description: "Reflections on conscience, responsibility, habits and their influence on architecture and the maintainability of projects."
 tags: ["clean-code", "code-quality", "ethics"]
 mins: 4
+tldr: "Code quality reflects more than technical skill—it shows the standards, responsibility, and care a developer brings to their work. Small daily choices shape the maintainability of systems and the experience of people who inherit them."
 aliases:
   - /blog/code-is-a-reflection-of-a-person/
   - /dev/code-is-a-reflection-of-a-person/
   - /thoughts/code-is-a-reflection-of-a-person/
-cover: cover.jpg
+cover: code-is-a-reflection-of-a-person.jpg
 ---
 ## What this blog is about
 

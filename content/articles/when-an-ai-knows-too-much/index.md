@@ -5,11 +5,12 @@ date: "2026-09-29T12:00:00Z"
 description: "A reflection on AI memory, privacy, safety, and the power that may belong to whoever controls the most personal data."
 tags: ["artificial-intelligence", "privacy", "dataism", "ethics"]
 mins: 6
+tldr: "AI that remembers us can make conversations more useful, but the same personal data can also enable surveillance and harmful intervention. The question is not just what AI can predict, but who controls that power and the safeguards protecting privacy and human judgment."
 aliases:
   - /blog/when-an-ai-knows-too-much/
   - /dev/when-an-ai-knows-too-much/
   - /thoughts/when-an-ai-knows-too-much/
-cover: cover.jpg
+cover: when-an-ai-knows-too-much.jpg
 ---
 ## The convenience of being known
 
@@ -17,7 +18,7 @@ I recently started thinking about the fact that I use an AI model almost every d
 
 This is very convenient. When I explore a new topic, I can ask the AI to connect it to what it already knows about me. I do not have to explain my background every time. The conversation becomes faster and more personal.
 
-I have enjoyed this experience. But it also led me to an uncomfortable question: could the same information that helps an AI understand me someday be used against me?
+I have enjoyed this experience. But it also led me to an uncomfortable question: *could the same information that helps an AI understand me someday be used against me?*
 
 Maybe this is an irrational fear. Still, I started wondering what it would mean for an AI model to “snitch” on someone using the information it had collected about them.
 
@@ -61,6 +62,8 @@ What if it contacted the wrong person or turned a harmless situation into an eme
 
 In both examples, the system does the same thing: it notices a pattern and acts on its interpretation. Whether we call that care or control may depend on who makes the decision and what happens next.
 
+![An AI offering care while casting a shadow of control](moonlight-desert.jpg)
+
 ## Privacy versus the greater good
 
 These thoughts reminded me of a passage from Yuval Noah Harari’s _Homo Deus_, especially the section about Dataism.
@@ -93,6 +96,8 @@ A wrong interpretation could affect our freedom, reputation, health, job, or rel
 
 That is why AI memory is also a question of power. Whoever controls the data does not only know more about people. They can also classify people, predict them, and decide what should happen next.
 
+![The same personal data producing two different interpretations](who-controls-the-interpretation.jpg)
+
 ## The old reality with a new source of power
 
 I do not have a final answer to these questions. At this point, I think reality may be simpler than it first appears—much like it was before the agricultural and industrial revolutions.
@@ -108,6 +113,8 @@ In the future, it may belong more and more to those who control the largest coll
 This changes how I see AI personalization. It is not only a useful feature that helps a model give better answers.
 
 It is also part of a larger system where being known can become a form of leverage.
+
+![A tower of personal data becoming a new source of power](data-becomes-power.jpg)
 
 ## Summary
 
