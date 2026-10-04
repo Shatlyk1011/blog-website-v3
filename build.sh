@@ -10,4 +10,6 @@ curl -fsSL -o "$BUILD_TEMP_DIR/hugo.tar.gz" \
   "https://github.com/gohugoio/hugo/releases/download/v${HUGO_VERSION}/hugo_extended_${HUGO_VERSION}_linux-amd64.tar.gz"
 tar -xzf "$BUILD_TEMP_DIR/hugo.tar.gz" -C "$BUILD_TEMP_DIR"
 
-"$BUILD_TEMP_DIR/hugo" --gc --minify
+"$BUILD_TEMP_DIR/hugo" --gc --minify --destination "$PWD/public"
+test -s "$PWD/public/index.html"
+printf '%s\n' 'Verified generated file: public/index.html'
