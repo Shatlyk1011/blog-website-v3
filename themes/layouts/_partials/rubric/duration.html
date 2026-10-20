@@ -1,0 +1,20 @@
+{{- /* Human series length from a total minute count. ≥60 min reads in hours
+       rounded to the nearest half ("~1.5 hours", "~1 hour"); below that, minutes
+       rounded to the nearest five ("~50 min"). The hour word and the decimal mark
+       are both i18n — a locale may need a different fraction word and its own
+       separator (Russian writes "1,5") — so every site formats its own way.
+       Context = int minutes. Returns a string (no leading "~"; the caller
+       supplies it). */ -}}
+{{- $m := . -}}
+{{- $out := "" -}}
+{{- if ge $m 60 -}}
+  {{- $r := div (math.Round (mul (div (float $m) 60.0) 2)) 2.0 -}}
+  {{- if eq $r (math.Floor $r) -}}
+    {{- $out = i18n "hours_count" (int $r) -}}
+  {{- else -}}
+    {{- $out = printf "%s %s" (replace (printf "%.1f" $r) "." (i18n "decimal_sep")) (i18n "hours_gen") -}}
+  {{- end -}}
+{{- else -}}
+  {{- $out = printf "%d %s" (int (mul (math.Round (div (float $m) 5.0)) 5)) (i18n "mins_abbr") -}}
+{{- end -}}
+{{- return $out -}}

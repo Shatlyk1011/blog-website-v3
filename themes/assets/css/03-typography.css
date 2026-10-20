@@ -1,0 +1,180 @@
+/* typography */
+h2{font-size:27px; line-height:1.2; font-weight:700; letter-spacing:-.01em; margin:42px 0 16px}
+h3{font-size:20px; font-weight:650; margin:34px 0 12px; color:var(--text-primary)}
+/* markdown-style hash prefix on headings — a clickable deep-link anchor */
+h2 .hash, h3 .hash, h4 .hash{
+  position:relative;
+  font-family:inherit; font-weight:inherit; font-size:inherit; color:var(--text-muted);
+  margin-right:.4em; border:0; text-decoration:none;
+  transition:color var(--dur) var(--ease);
+}
+h2 .hash::after, h3 .hash::after, h4 .hash::after{
+  content:""; position:absolute; left:0; right:0; top:1.1em; height:2px;
+  pointer-events:none;
+  background-image:radial-gradient(circle, currentColor .8px, transparent 1.2px);
+  background-size:3px 2px; background-repeat:space; background-position:center;
+  opacity:0; transition:opacity var(--dur) var(--ease);
+}
+h2:hover .hash::after, h3:hover .hash::after, h4:hover .hash::after,
+h2 .hash:focus-visible::after, h3 .hash:focus-visible::after, h4 .hash:focus-visible::after{opacity:1}
+h2 .hash:hover, h3 .hash:hover, h4 .hash:hover,
+h2 .hash:focus-visible, h3 .hash:focus-visible, h4 .hash:focus-visible{color:var(--accent)}
+.hash:focus-visible{outline:2px solid var(--accent); outline-offset:3px; border-radius:3px}
+p{margin:0 0 16px}
+ul,ol{margin:0 0 16px; padding-left:22px}
+li{margin:0 0 9px}
+li::marker{color:var(--accent)}
+/* Emphasis follows its surroundings. --strong-fg lets a DIMMED block (a preview
+   card) say what "one step brighter than this text" means there: without it the
+   global --text-strong punched a full-brightness lead-in through a muted
+   paragraph. (The fold's body used to need this too; it is set in prose colour
+   now, so it takes --text-strong like the article around it.) `em` sets no
+   colour at all — in prose it only ever repeated the body colour, and
+   everywhere else it was an unwanted highlight. */
+strong{color:var(--strong-fg, var(--text-strong)); font-weight:650}
+em{font-style:italic}
+.muted{color:var(--text-muted)}
+blockquote{margin:0 0 22px; padding:2px 0 2px 18px; border-left:3px solid var(--accent); color:var(--text-secondary); font-style:italic}
+blockquote p{margin:0}
+
+/* prose links — quiet at rest, accent on intent. The base a{} (01-base.css)
+   paints links in full --accent, which is right for chrome (cards, nav, series
+   bridge) but too loud inside long-form prose: in link-dense paragraphs every
+   link is an accent-filled word, the eye snags on it, and the accent's
+   structural roles (list markers, the blockquote rule, callout frames) lose
+   their meaning. In prose the link cue moves from glyph fill to a translucent
+   accent underline: the word reads as body text, the line marks it as a link,
+   and hover warms the whole word to full accent over a soft --accent-dim pill.
+   The underline is load-bearing for WCAG 1.4.1 — an accent that sits well on
+   the page bg rarely reaches the 3:1 contrast against body text that a
+   colour-only cue would need — and text-decoration (not the base border-
+   bottom) buys skip-ink over descenders (у р ф ц щ). color:inherit rather
+   than a token, so a link inside blockquote or a callout adopts its
+   container's quieter tone. Everything routes through --accent/--accent-dim,
+   so the treatment follows whatever accent a palette or site pin defines.
+
+   The hover pill is padding-built, compensated by negative margins so the
+   line never moves: padding joins both the painted background and the pointer
+   hit area, keeping the visible pill and the hover zone in exact agreement.
+   (A box-shadow pill would paint outside the hit area — hover then drops
+   while the cursor is still on the visible pill.) box-decoration-break gives
+   each fragment of a line-wrapped link its own rounded pill.
+
+   Scope: prose containers inside the article/rubric column (.wrap) and the
+   feed's lead (.p-lead), which is the same rendered prose shown outside that
+   column — a link had no business changing colour between the card and the
+   page it opens. Kept as :is() rather than a second :where(): the scope must
+   still outweigh the base a{} in 01-base.css, and :where() would zero the
+   selector out. The container list is wrapped in :where() so it adds no
+   specificity and any component rule still wins. Excluded as navigation, not
+   prose: .toc, the .slist series-part rows (rubric block + series landing) and the .alist
+   rubric article rows — all identified by position and layout, and their
+   row-links wrap meta spans the underline would run under. Also excluded:
+   .hash heading anchors, .btn, and footnote marks — a superscript digit is
+   too small to carry an underline, and at that size the accent fill never
+   disturbs reading. And .p-more: the feed's read-more tail sits in a <p>
+   inside .p-lead, so it fell into this scope by accident. It already owns a
+   quieter version of the same idea (14-home.css) — a rest state with no rule
+   at all, an underline that belongs to hover and to the word only. The prose
+   treatment overrode it with a rest underline plus a hover pill around a
+   two-word link, which read as a button. */
+:is(.wrap, .p-lead) :where(p, li, dd, td, blockquote, .lead, .foot)
+  a:not(:where(.toc a, .slist a, .alist a, .hash, .btn, .p-more, .footnote-ref, .footnote-backref)){
+  color:inherit;
+  border-bottom:0;              /* the base a:hover border must never resurface */
+  text-decoration:underline;
+  text-decoration-color:color-mix(in srgb, var(--accent) 50%, transparent);
+  text-decoration-thickness:1px;
+  text-underline-offset:.18em;
+  text-decoration-skip-ink:auto;
+  /* 3px of side bleed keeps a sliver of daylight between the pill and the
+     neighbouring word (a space is ~4px at this size); 4px ate it whole */
+  padding:2px 3px; margin:0 -3px;
+  border-radius:5px;
+  -webkit-box-decoration-break:clone; box-decoration-break:clone;
+  transition:color var(--dur) var(--ease),
+             background-color var(--dur) var(--ease),
+             text-decoration-color var(--dur) var(--ease);
+}
+:is(.wrap, .p-lead) :where(p, li, dd, td, blockquote, .lead, .foot)
+  a:not(:where(.toc a, .slist a, .alist a, .hash, .btn, .p-more, .footnote-ref, .footnote-backref)):hover{
+  color:var(--accent);
+  /* the underline is deliberately NOT restyled here: it holds its rest state
+     so hover changes as little as possible — the word warms, the pill fades
+     in, the line stays put as an anchor. Brightening it to full accent drew
+     a loud stripe inside the pill; hiding it made the state flip busier
+     (something vanishing while something appears). At 50% alpha it all but
+     blends into the pill fill. */
+  background:var(--accent-dim);
+}
+/* focus ring for every link in these containers, the excluded navigation
+   rows included — the outline is the theme's focus pattern, not part of the
+   quiet-link look */
+:is(.wrap, .p-lead) :where(p, li, dd, td, blockquote, .lead, .foot) a:focus-visible{
+  outline:2px solid var(--accent); outline-offset:3px; border-radius:3px;
+}
+/* a linked image must not draw the underline beneath the picture, nor grow
+   the pill box around it */
+.wrap :where(p, li) a:has(> img){text-decoration:none; padding:0; margin:0}
+
+/* thematic break (markdown ----): the same --border hairline as the lead deck
+   and the h2 rules, with generous air so it reads as a deliberate section
+   break rather than an underline */
+hr{border:0; height:1px; background:var(--border); margin:40px 0}
+
+/* inline + block code
+   The listing's metrics are tokens rather than literals because a second
+   element has to match them to the pixel: the live editor's textarea lies on
+   top of the highlighted block (25-code-editor.css), and a glyph that sits half
+   a line off its coloured twin is worse than no highlighting at all. Change
+   them here and the editor follows. */
+/* --code-tab is the browser default (8), spelled out rather than inherited:
+   Chroma keeps real tabs in the markup, so the listing and the editor's
+   textarea must agree on their width or the code shifts under the caret. */
+:root{--code-fs:13.5px; --code-lh:1.7; --code-pad:16px 18px; --code-tab:8}
+code{font-family:var(--font-mono); font-size:.86em}
+/* JetBrains Mono ships programming ligatures on by default, so `>=` reaches the
+   reader as a single ≥ glyph and `!=` as ≠ — a character that is not in the
+   source and that nobody can paste back into a compiler. Code on this site is
+   quoted Go, not typography, so every operator stays the pair of glyphs the
+   file actually contains. The editor's textarea and codapi's output are listed
+   too: the caret in .ced-input must sit over the glyph it highlights, and one
+   ligature there would shift the whole line off its coloured twin. */
+code, pre, kbd, samp, .ced-input, codapi-output, codapi-status{
+  font-variant-ligatures:none; font-feature-settings:"liga" 0,"calt" 0}
+p code, li code, td code, h3 code, blockquote code{background:var(--bg-surface); border:1px solid var(--border); border-radius:6px; padding:1px 6px; color:var(--text-strong); white-space:nowrap}
+pre{margin:0 0 20px; background:var(--bg-deep); border:1px solid var(--border); border-radius:var(--radius); padding:var(--code-pad); overflow-x:auto; position:relative}
+pre code{font-size:var(--code-fs); line-height:var(--code-lh); color:var(--text-primary); white-space:pre; background:none; border:0; padding:0; tab-size:var(--code-tab)}
+.gtok-kw{color:var(--accent)}
+.gtok-typ{color:var(--accent-blue)}
+.gtok-fn{color:var(--accent-green)}
+.gtok-str{color:var(--gtok-str)}
+.gtok-num{color:var(--accent-copper)}
+.gtok-com{color:var(--text-muted); font-style:italic}
+.code-label{display:block; font-family:var(--font-mono); font-size:10px; letter-spacing:.1em; text-transform:uppercase; color:var(--text-muted); margin:0 0 8px}
+
+/* content images */
+/* On dark palettes, dim images at rest and reveal full brightness on hover,
+   so a bright screenshot never punches a hole in a dark page. Gated on
+   (hover: hover) so it runs only on pointer devices — a touch screen has no
+   hover to undo the dimming, which would leave images dark for good.
+   Keyed on data-scheme, the root element's lightness flag (baseof.html from the
+   palette's `light = true`, kept in sync by prefs.js / view.js — see
+   docs/customizing.md): it names the property that actually matters, and a new
+   light palette joins by declaring itself light rather than by being added to a
+   list of exceptions here.
+   Every hoverable picture on the site shares this one mechanic — prose images,
+   pictures inside a feed preview, and the feed's banner cover (.p-cover,
+   14-home.css). The cover's hover target
+   is its frame, not the <img>, because the image scales inside that frame and a
+   pointer near the cropped edge must still count as "on it". Timing lives with
+   each component: the cover animates brightness together with its zoom. */
+@media (hover:hover){
+  [data-scheme="dark"] :where(.wrap, .p-lead) img{filter:brightness(.9); transition:filter .6s ease-out}
+  [data-scheme="dark"] :where(.wrap, .p-lead) img:hover{filter:none}
+  [data-scheme="dark"] .p-cover img{filter:brightness(.9)}
+  [data-scheme="dark"] .p-cover:hover img{filter:none}
+}
+@media (prefers-reduced-motion:reduce){
+  [data-scheme="dark"] :where(.wrap, .p-lead) img{transition:none}
+}

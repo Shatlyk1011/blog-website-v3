@@ -1,0 +1,574 @@
+# English equivalents. Content stays Russian until a translation is added; these
+# keep the theme chrome language-agnostic.
+
+[to_home]
+other = "home"
+[nav_rubrics]
+other = "Rubrics"
+# accessible name of the burger that carries the rubric nav on a narrow screen
+[nav_menu]
+other = "Sections menu"
+[search]
+other = "Search"
+[repo_link]
+other = "Source code"
+[search_label]
+other = "search"
+[lang_switch]
+other = "Language"
+
+# footer feed link (the other footer labels are the site's menus.footer entries)
+[foot_rss]
+other = "rss"
+# Accessible name of the footer's link row. A <nav> is a landmark, and a
+# reader jumping between landmarks hears only the name — "footer" is where
+# it is, not what is in it.
+[foot_nav_aria]
+other = "Site links"
+
+[nf_kicker]
+other = "404 · page not found"
+[nf_title]
+other = "No such page."
+[nf_line]
+other = "But there are three rubrics — start anywhere."
+[nf_home]
+other = "← home"
+
+[minutes]
+one = "{{ .Count }} min"
+other = "{{ .Count }} min"
+
+[guides_left]
+one = "{{ .Count }} more guide"
+other = "{{ .Count }} more guides"
+
+[parts_count]
+one = "{{ .Count }} part"
+other = "{{ .Count }} parts"
+
+[words]
+one = "{{ .Count }} word"
+other = "{{ .Count }} words"
+
+[part_of]
+other = "part {{ .N }} of {{ .M }}"
+
+# ── article machinery (phase 02) ─────────────────────────────────────────────
+
+[anchor_sec]
+other = "Section anchor"
+[anchor_sub]
+other = "Subsection anchor"
+
+[callout_key]
+other = "Key idea"
+[callout_trap]
+other = "Trap"
+[callout_internals]
+other = "Under the hood"
+[callout_note]
+other = "Historical note"
+[callout_warn]
+other = "Caution"
+
+[widget_cap]
+other = "Play"
+
+[toc_heading]
+other = "Contents"
+[rail_l_aria]
+other = "Series navigation"
+[rail_r_aria]
+other = "Page contents"
+[rail_r_head]
+other = "on this page"
+[rail_hide_l]
+other = "Collapse"
+[rail_hide_r]
+other = "Collapse"
+[rail_related]
+other = "related"
+
+[meta_tested_on]
+other = "tested on"
+[meta_interactive]
+other = "interactive"
+[mins_abbr]
+other = "min"
+
+[kicker_standalone]
+other = "deep dive"
+
+[series_word]
+other = "series"
+[all_series]
+other = "whole series →"
+# og:title of a series landing — the only place a share card can say that the
+# link is a whole series and not one more article (head/og.html)
+[og_series_of]
+one = "a series of {{ .Count }} part"
+other = "a series of {{ .Count }} parts"
+[series_start]
+other = "start the series"
+[series_soon]
+other = "This series is in the works — parts will land in the feed."
+# a single announced (not-yet-published) part inside a live series
+[part_soon]
+other = "soon"
+
+[sbr_behind]
+other = "<b>{{ .done }} of {{ .total }}</b> behind you"
+[sbr_ahead]
+other = "{{ .n }} ahead"
+[parts_word]
+one = "part"
+other = "parts"
+[sbr_left]
+other = "<b>~{{ .mins }} min</b>"
+[sbr_done]
+other = "series complete · <b>{{ .total }} of {{ .total }}</b>"
+[sbr_next_k]
+other = "next · part {{ .n }}"
+[sbr_final_k]
+other = "series finale"
+[sbr_final_t]
+other = "The whole «{{ .name }}» series — pick what to revisit"
+[sbr_prev]
+other = "← part {{ .n }} · {{ .short }}"
+[sbr_seg_title]
+other = "part {{ .n }} · {{ .short }}"
+
+# ── chrome: home, rubric, tags (phase 03) ────────────────────────────────────
+
+[featured_head]
+other = "guide of the week"
+[read_guide]
+other = "read guide"
+[featured_all]
+other = "whole series"
+[feed_head]
+other = "the feed"
+# quiet tail link under a long feed preview (params.home.feedPreview = "summary")
+[feed_read]
+other = "read"
+
+[guides_count]
+one = "{{ .Count }} guide"
+other = "{{ .Count }} guides"
+[series_count]
+one = "{{ .Count }} series"
+other = "{{ .Count }} series"
+[reviews_count]
+one = "{{ .Count }} deep dive"
+other = "{{ .Count }} deep dives"
+[rubric_empty]
+other = "in the works"
+[hours_count]
+one = "{{ .Count }} hour"
+other = "{{ .Count }} hours"
+[tags_count]
+one = "{{ .Count }} tag"
+other = "{{ .Count }} tags"
+
+[rubric_word]
+other = "rubric"
+[standalone_head]
+other = "outside the series"
+[hours_gen]
+other = "hours"
+[decimal_sep]
+other = "."
+
+[tags_cloud]
+other = "cloud"
+[tags_cloud_aria]
+other = "Tag cloud"
+[tags_hint]
+other = "click a tag — the picks show up here · full feed is <a href=\"{{ .home }}#feed\">on the home page</a>"
+[tags_noscript]
+other = "The tag cloud is built on the fly — without JavaScript the page stays quiet. The full feed lives <a href=\"{{ .home }}#feed\">on the home page</a>."
+
+[roadmap_bar_aria]
+other = "readiness"
+[roadmap_now]
+other = "In progress"
+[roadmap_queue]
+other = "Next in the queue"
+[roadmap_how]
+other = "How we pick what to write"
+
+# ── feed dates (date.html) ───────────────────────────────────────────────────
+[month_1]
+other = "Jan"
+[month_2]
+other = "Feb"
+[month_3]
+other = "Mar"
+[month_4]
+other = "Apr"
+[month_5]
+other = "May"
+[month_6]
+other = "Jun"
+[month_7]
+other = "Jul"
+[month_8]
+other = "Aug"
+[month_9]
+other = "Sep"
+[month_10]
+other = "Oct"
+[month_11]
+other = "Nov"
+[month_12]
+other = "Dec"
+
+# ── strings that live in JS ──────────────────────────────────────────────────
+# Everything below is shipped to the browser by the js-bridge partial as
+# window.THEME_I18N; modules/i18n.js merges it over its English defaults. The
+# `js_` prefix marks exactly which keys leave the server.
+
+[js_theme_head]
+other = "Palette"
+[js_popover_aria]
+other = "Site palette"
+[js_pin_panel]
+other = "pin panel"
+[js_key_or]
+other = "or"
+
+[js_focus_exit_tip]
+other = "Leave focus"
+[js_focus_title]
+other = "Focus: text only (F)"
+[js_focus_aria]
+other = "Focus: hide the rails and the header (F)"
+
+[js_search_aria]
+other = "Search the guides"
+[js_search_placeholder]
+other = "search a guide, a series, a topic…"
+[js_search_empty]
+other = "Nothing found. Try «gc», «slice», «scheduler»…"
+[js_search_unbuilt]
+other = "The search index isn't built yet. Build it with pagefind --site public."
+
+# The modal's zero state — what stands there before the first keystroke. Two
+# sections: what the reader opened themselves, and what landed recently. The
+# "N in all" tail on the second one is there so the list does not read as the
+# whole catalogue: it is five rows out of N.
+[js_search_recent]
+other = "recently opened"
+[js_search_latest]
+other = "latest guides"
+[js_search_latest_total]
+other = "{{ .N }} in all"
+[js_search_hint]
+other = "searches the text of the guides — «gc», «slice», «scheduler»"
+
+[js_scrolltop]
+other = "Back to top"
+
+[js_tag_feed_head]
+other = "feed"
+[js_tag_reset]
+other = "reset"
+[js_tag_empty_tail]
+other = " — no such tag. Check the link, or pick a topic from the cloud above."
+# bare plural word for the filter's "N guides" line: the count is only known in
+# the browser, so Hugo renders one word per probe count and Intl.PluralRules
+# picks the matching one (see modules/i18n.js plural()).
+[js_guides_word]
+one = "guide"
+other = "guides"
+
+# runnable snippets: the editing controls next to codapi's Run button.
+# {mod} is filled in by the browser: ⌘ on a Mac, Ctrl everywhere else. The
+# hint is injected as HTML and carries the theme's own key caps —
+# <kbd class="kb">, the same ones the header's ⌘K wears.
+[js_code_edit]
+other = "Edit"
+[js_code_close]
+other = "Close"
+[js_code_reset]
+other = "Reset"
+[js_code_hint]
+other = "<kbd class=\"kb\">{mod} + Enter</kbd> run · <kbd class=\"kb\">Esc</kbd> close"
+[js_code_aria]
+other = "Editable code"
+
+# copy button on a code listing. It is icon-only, so js_copy_code is its whole
+# accessible name — the label of the control, not of the outcome. The other two
+# ARE the outcome: swapping an icon says nothing to a screen reader, so the
+# result is announced through a live region (modules/codecopy.js).
+[js_copy_code]
+other = "Copy the code"
+[js_copy_done]
+other = "The code is copied to the clipboard"
+[js_copy_fail]
+other = "Could not copy the code"
+
+# run shortcode: the provenance line of the output block. run_example labels the
+# output the AUTHOR recorded, run_ok / run_failed the one the READER just got
+# (each followed by the duration), run_restore brings the author's back. The
+# status line beside Run stays codapi's own; a site that wants it worded
+# differently passes status-running / status-done / status-failed to the
+# shortcode.
+[run_example]
+other = "example"
+[run_ok]
+other = "run"
+[run_failed]
+other = "error"
+[run_restore]
+other = "restore example"
+[run_empty]
+other = "(no output)"
+
+# term shortcode: the definition card's footer link and its no-JS appendix.
+[term_more]
+other = "read more"
+[term_back]
+other = "← back to the text"
+[term_cards_head]
+other = "Definitions"
+[term_cards_aria]
+other = "Definitions of terms used in the article"
+
+# ── link previews (24-linkpreview.css / modules/linkpreview.js) ───────────────
+# All server-rendered into the preview fragment / the pre-rendered tg/yt cards.
+[lp_read]
+other = "Read the article"
+[lp_to_section]
+other = "To the section"
+[lp_further]
+other = "Further in the article"
+[lp_of]
+other = "of"
+[lp_open_series]
+other = "Open the series"
+[lp_articles]
+one = "{{ .Count }} article"
+other = "{{ .Count }} articles"
+[lp_more_parts]
+one = "…{{ .Count }} more part"
+other = "…{{ .Count }} more parts"
+[lp_widget]
+other = "Interactive figure"
+[lp_run]
+other = "runs in the article"
+[lp_open_post]
+other = "Open the post in Telegram"
+[lp_open_channel]
+other = "Open the channel in Telegram"
+[lp_subs_word]
+one = "subscriber"
+other = "subscribers"
+[lp_watch_yt]
+other = "Watch on YouTube"
+[lp_views]
+other = "views"
+[lp_today]
+other = "today"
+[lp_yesterday]
+other = "yesterday"
+[lp_wikipedia]
+other = "Wikipedia"
+[lp_read_wiki]
+other = "Read on Wikipedia"
+[lp_read_gob]
+other = "Read on the Go blog"
+[lp_read_gdoc]
+other = "Read on go.dev"
+
+# ── newsletter (28-newsletter.css / modules/newsletter.js) ────────────────────
+# The subscription UI: header button + popover, in-article and series-landing
+# blocks, the footer link. nl_msg_* / nl_again are JS strings — js-bridge.html
+# hands them over as window.THEME_I18N.nlMsg* (see docs/i18n.md). Long copy (the
+# subscribe page, a block's text in one particular guide) is site content and is
+# deliberately absent here.
+[nl_btn_aria]
+other = "Subscribe to new guides"
+[nl_btn_tip]
+other = "Newsletter"
+[nl_pop_head]
+other = "new guides — by mail"
+[nl_pop_more]
+other = "the subscribe page"
+# Deliberately short: the header popover's field is the narrowest place the
+# feature has, and its right edge is reserved for the button password/relay
+# extensions inject (see .nl-field in 28-newsletter.css). "you@example.com" did
+# not fit in what is left and was clipped on the tail.
+[nl_placeholder]
+other = "your@mail.com"
+[nl_field_aria]
+other = "Email address"
+[nl_go]
+other = "Subscribe"
+[nl_note_short]
+other = "New guides and big updates only. No spam, one-click unsubscribe."
+[nl_cta_title]
+other = "Next, by mail"
+[nl_cta_body]
+other = "New guides come out rarely. Leave your address and I'll write when there is something to read."
+[nl_series_body]
+other = "The series goes on. Leave your address and I'll write when the next part is out."
+[nl_block_aria]
+other = "Newsletter subscription"
+[nl_dismiss_tip]
+other = "Collapse this block"
+# The collapsed block leaves this one quiet line behind, so a reader who
+# folded the form away can still unfold it. nl_ghost_restore is the link.
+[nl_ghost]
+other = "Subscription form collapsed"
+[nl_ghost_restore]
+other = "bring it back"
+[nl_ghost_aria]
+other = "Collapsed subscription form"
+[nl_restore_tip]
+other = "Bring the subscription form back"
+# Shown in place of the form once this browser has completed a subscription.
+# The flag is a boolean in localStorage — the address itself is never stored.
+[nl_subscribed]
+other = "You're subscribed — I'll write when there's something new."
+[nl_subscribed_pop]
+other = "You're subscribed."
+[nl_sub_other]
+other = "subscribe another address"
+[nl_foot_link]
+other = "newsletter"
+[nl_archive_title]
+other = "Past issues"
+[nl_archive_sub]
+other = "Every issue is open and readable without subscribing."
+[nl_letter_inbox]
+other = "Inbox"
+# The sample letter reproduces the real campaign footer, so these four read
+# exactly as the sending template does. Change them together with it.
+# In nl_letter_reply, {from} is replaced with the sender name from the shortcode.
+#
+# nl_letter_unsub is a bare "unsubscribe", and that is NOT a drift from
+# nl_note_short above. On a form, "unsubscribe in one click" is a promise made
+# BEFORE signing up: it answers the fear of not getting out later. In the
+# letter the reader is already subscribed and wants the door, not an advert
+# for how easy it is. Do not unify the two.
+[nl_letter_why]
+other = "You are getting this because you subscribed to the {site} newsletter."
+[nl_letter_unsub]
+other = "unsubscribe"
+[nl_letter_browser]
+other = "view in browser"
+[nl_letter_reply]
+other = "{from}. You can reply to this letter — I read every one."
+[nl_letter_to]
+other = "to: you"
+# Form strings owned by JS (modules/newsletter.js). In nl_msg_ok, {email} is
+# replaced with the address the reader typed, and set in bold. The *_hint keys
+# are the second, quieter line under a status; in nl_msg_fail_hint {email} is
+# the author's own address (params.newsletter.contactEmail), turned into a
+# mailto link — without one the line is not rendered at all.
+[nl_msg_empty]
+other = "Enter an email address."
+[nl_msg_typo]
+other = "That address looks like a typo — please check it."
+[nl_msg_fail]
+other = "That didn't work — please try again."
+# Not an excuse but the only way out of a legitimate dead end: an address the
+# list blocked after a bounce gets the same error on every attempt, and "try
+# again" is advice that cannot work for it.
+[nl_msg_fail_hint]
+other = "Keeps happening? Write to me: {email}"
+[nl_msg_ok]
+other = "A confirmation letter is on its way to {email}. Follow the link in it and you're done."
+# The letter goes out on every repeat attempt, so the hint is honest: if it is
+# nowhere to be seen, it is almost certainly in the spam folder.
+[nl_msg_ok_hint]
+other = "No letter in the inbox — have a look in the spam folder."
+[nl_again]
+other = "use another address"
+
+# ── comments (29-comments.css / modules/comments.js) ─────────────────────────
+# Strings for the comments block (Comentario). The js_cmnt_* keys reach the
+# bundle through js-bridge.html as window.THEME_I18N.cmnt* (see docs/i18n.md);
+# cmnt_head is rendered straight into the markup by Hugo.
+[cmnt_head]
+other = "Discussion"
+
+# The figure beside the heading when the thread is empty. Written only once the
+# engine has rendered: from outside, an empty thread and an unloaded one look
+# alike, and "no comments yet" is a claim rather than a placeholder.
+[js_cmnt_none]
+other = "no comments yet"
+
+# The one failure the engine cannot report: its own bundle never arriving.
+# Everything else it explains for itself.
+[js_cmnt_error]
+other = "Comments failed to load."
+[js_cmnt_retry]
+other = "Try again"
+
+# Thread sort order. The engine offers four orders through three buttons: the
+# score button becomes a toggle once chosen, and the only sign of its second
+# state was an 8px caret flipping over — which nobody notices. These labels
+# replace the engine's own ("Score · Oldest · Newest" mixes a criterion with two
+# values, where three values of one thing are wanted), and the flipped order
+# names itself.
+[js_cmnt_sort_best]
+other = "Best"
+[js_cmnt_sort_worst]
+other = "Worst"
+[js_cmnt_sort_oldest]
+other = "Oldest"
+[js_cmnt_sort_newest]
+other = "Newest"
+
+# The word "comment" for the line in the block header. The engine ships a single
+# form per language, which reads wrong for any count but one in English too.
+[js_cmnt_word]
+one = "comment"
+other = "comments"
+
+# The same for a folded branch: "2 REPLIES — SHOW". The engine only half-folds
+# one (the replies fade but keep their space), so the label is ours as well.
+[js_cmnt_reply_word]
+one = "reply"
+other = "replies"
+[js_cmnt_show]
+other = "show"
+
+# The comment form. Anonymous commenting is off; the cost of entry is stated
+# when the editor opens rather than after the reader has finished writing. The
+# submit label describes the code: the engine publishes the comment with the
+# same call that completes the login, and the draft survives the round trip.
+[js_cmnt_write]
+other = "Write a comment…"
+[js_cmnt_submit]
+other = "Submit"
+[js_cmnt_submit_in]
+other = "Sign in and submit"
+
+# The one action the thread exists for is the one that gets a word instead of a
+# glyph. The votes stay arrows.
+[js_cmnt_reply]
+other = "Reply"
+
+# The domain owner's badge. The engine calls it "Moderator" — a role nobody
+# plays on a blog with one author.
+[js_cmnt_author]
+other = "Author"
+
+# The login dialog. The engine titles it "Sign in" and heads the provider list
+# with "Sign in with", saying the same thing twice and never saying why a dialog
+# appeared at all — which was because the reader pressed reply or a vote arrow.
+[js_cmnt_login_title]
+other = "Sign in"
+[js_cmnt_login_why]
+other = "Commenting and voting need an account"
+
+# Moderation states. Premoderation is off, but it goes on with a checkbox and no
+# restart — the day it does is the wrong day to find these were never drawn.
+[js_cmnt_pending]
+other = "awaiting moderation"
+[js_cmnt_rejected]
+other = "rejected by a moderator"

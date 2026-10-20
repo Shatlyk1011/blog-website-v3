@@ -1,0 +1,398 @@
+/* ---- wide shell pages (index, rubrics, about) ---- */
+.shell{max-width:var(--shell); margin:0 auto; padding:0 24px}
+.page-pad{padding-top:56px; padding-bottom:96px}
+/* buttons (featured block, roadmap) */
+.btn-cta{display:inline-flex; align-items:center; gap:8px; font-family:var(--font-mono); font-size:13px; font-weight:600;
+  color:var(--bg-deep); background:var(--accent); border:1px solid var(--accent); border-radius:10px; padding:10px 16px;
+  transition:filter var(--dur) var(--ease), box-shadow var(--dur) var(--ease)}
+.btn-cta:hover{filter:brightness(1.08); box-shadow:0 0 22px var(--accent-glow); border-color:var(--accent)}
+.btn-ghost{display:inline-flex; align-items:center; gap:8px; font-family:var(--font-mono); font-size:13px;
+  color:var(--text-secondary); background:var(--bg-surface); border:1px solid var(--border); border-radius:10px; padding:10px 16px;
+  transition:color var(--dur) var(--ease), border-color var(--dur) var(--ease)}
+.btn-ghost:hover{color:var(--text-primary); border-color:var(--text-muted)}
+
+/* ---- home: intro line ---- */
+.hero-line{display:flex; align-items:center; gap:9px; flex-wrap:wrap; padding:38px 0 4px;
+  font-family:var(--font-mono); font-size:11.5px; letter-spacing:.1em; text-transform:uppercase; color:var(--text-muted)}
+.hero-line .dot{width:7px; height:7px; border-radius:50%; background:var(--accent); box-shadow:0 0 10px var(--accent-glow); flex:0 0 auto}
+.hero-line .sat{color:var(--text-secondary)}
+/* the separator carries its own space: it was lifted out of the param's text
+   (see home.html), so the space that used to follow it in the string is gone */
+.hero-line .sat-sep{margin-right:.5ch}
+
+/* ---- home: hero zone background markup (params.home.grid) ----
+   A full-bleed layer confined to the hero zone (heading + kicker + cards,
+   bleeding 34px toward the feed). The ink is DERIVED from --border — the
+   palette's own "barely visible line" token — so every palette draws lines it
+   already tuned for itself (5% of text-primary vanished on white canvases);
+   "fade" dissolves the grid toward the feed through a mask. A palette MAY pin
+   its own ink via a `gridline` / `griddot` token in data/themes/<id>.toml —
+   none has to, the derivation below is the working default. z-index:-1 keeps
+   the layer under all content. */
+.hero-zone{position:relative;
+  --_gridline:var(--gridline, color-mix(in srgb, var(--border) 45%, transparent));
+  --_griddot:var(--griddot, color-mix(in srgb, var(--border) 90%, transparent));
+  --gstep:46px}
+/* light canvases flatten low-alpha ink (Weber: the same delta reads weaker on
+   white), so the grid runs denser there — just under the palette's hairline
+   borders; dark palettes keep the exact pre-derivation look via the 45% base */
+[data-scheme="light"] .hero-zone{
+  --_gridline:var(--gridline, color-mix(in srgb, var(--border) 80%, transparent));
+  --_griddot:var(--griddot, var(--border))}
+.hero-zone[data-grid]::before{content:""; position:absolute; z-index:-1; pointer-events:none;
+  top:0; bottom:-34px; left:50%; width:100vw; transform:translateX(-50%);
+  background-position:50% 0; display:none}
+/* the 100vw layer must never spawn a horizontal scrollbar: clip (not hidden —
+   hidden would turn <html> into a scroll container and break sticky) exactly
+   on the pages that draw the layer */
+html:has(.hero-zone[data-grid]){overflow-x:clip}
+.hero-zone[data-grid="grid"]::before,
+.hero-zone[data-grid="fade"]::before{display:block;
+  background-image:
+    linear-gradient(to right, var(--_gridline) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--_gridline) 1px, transparent 1px);
+  background-size:var(--gstep) var(--gstep)}
+.hero-zone[data-grid="fade"]::before{
+  -webkit-mask-image:linear-gradient(to bottom, #000 52%, transparent 97%);
+  mask-image:linear-gradient(to bottom, #000 52%, transparent 97%)}
+.hero-zone[data-grid="dots"]::before{display:block;
+  background-image:radial-gradient(circle 1.3px, var(--_griddot) 98%, transparent);
+  background-size:var(--gstep) var(--gstep)}
+
+/* ---- home: hero heading scene (params.home.hero = "wordmark") ----
+   The mark is the header brand writ large (logo.html + brand name); with the
+   scene on, the kicker (.hero-line) demotes to a centered subtitle and the
+   rubric tiles breathe — both keyed off sibling combinators, so a home
+   without the scene keeps today's exact layout. */
+.hero-head{padding-top:56px}
+.hh-inner{display:flex; align-items:flex-end; justify-content:center; gap:24px; flex-wrap:wrap}
+.hh-mark{display:inline-flex; align-items:center; font-family:var(--font-mono); font-weight:700;
+  font-size:clamp(42px, 6.4vw, 64px); letter-spacing:-.02em; line-height:1.1;
+  color:var(--text-strong); white-space:nowrap}
+.hh-mark svg{width:1.4em; height:1.4em; display:block; margin-right:.4em}
+/* At this size the mark drops its plate and becomes a drawing again. The plate
+   exists so the tree survives a favicon — the tiers measure ~1.6:1 against a
+   dark canvas and carry no shape on their own, so the silhouette of the rounded
+   square is what the eye actually reads. Blown up over the hero backdrop that
+   silhouette turns into a hole punched through the grid, and the tree inside it
+   is still unreadable: the worst of both.
+   Hiding the plate alone would leave nothing, so the tiers change ink with it —
+   currentColor, i.e. the same ink as the wordmark beside them, held back to a
+   fraction so the drawing sits under the word rather than beside it as an equal.
+   Taking the colour from the text is also what makes this work on all twelve
+   palettes, the light one included, where a literal grey could not. */
+.hh-mark svg .mark-plate{display:none}
+.hh-mark svg .mark-tier{fill:currentColor; opacity:.45}
+.hh-mark .tld{color:var(--accent)}
+.hh-mascot{flex:0 0 auto}
+.hh-mascot svg{display:block; height:96px; width:auto}
+.hero-head + .hero-line{justify-content:center; padding:18px 0 4px}
+.hero-head ~ .rubs2{margin-top:38px}
+/* Narrow screens keep the same scene at a smaller size; the rest of the phone
+   layout — kicker, rubric rows, rhythm — lives in one block at the end of this
+   file, so the whole small-screen composition can be read in one place. */
+@media(max-width:560px){
+  .hh-inner{gap:14px}
+  .hh-mark{font-size:clamp(30px, 9.6vw, 42px)}
+  .hh-mascot svg{height:66px}
+}
+
+/* ---- home: rubric cards (the showcase) ---- */
+.rubs2{display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin:22px 0 0}
+@media(max-width:880px){.rubs2{grid-template-columns:1fr}}
+.rub2{position:relative; display:flex; flex-direction:column; align-items:center; text-align:center; gap:7px;
+  padding:34px 22px 24px; border:1px solid var(--border); border-radius:16px;
+  background:var(--bg-surface);
+  color:var(--text-primary); overflow:hidden;
+  transition:border-color var(--dur) var(--ease), transform .18s var(--ease), box-shadow .18s var(--ease)}
+/* The text wrapper is inert here: the three lines stay direct children of the
+   card's own column. It only becomes a box on a phone, where the card turns
+   into a row (see the phone block at the end of this file). */
+.rub2 .r-txt{display:contents}
+/* hover lifts the SIGN, not the card — attention lands where the meaning is */
+.rub2:hover{border-color:color-mix(in srgb, var(--accent) 45%, var(--border));
+  box-shadow:0 20px 44px -20px rgba(0,0,0,.6)}
+.rub2 .r-logo{width:80px; height:80px; margin-bottom:10px; transition:transform .18s var(--ease)}
+.rub2 .r-logo svg{width:100%; height:100%; display:block}
+/* hover = lift/scale only — no glow: drop-shadow on the sign reads as toy-like */
+.rub2:hover .r-logo{transform:translateY(-3px) scale(1.06)}
+@media (prefers-reduced-motion:reduce){ .rub2:hover .r-logo{transform:none} }
+.rub2 .r-t{font-size:20px; font-weight:700; letter-spacing:-.01em; color:var(--text-strong)}
+.rub2 .r-d{font-family:var(--font-mono); font-size:11.5px; color:var(--text-muted); letter-spacing:.02em}
+.rub2 .r-n{margin-top:14px; font-family:var(--font-mono); font-size:11px; color:var(--text-muted);
+  transition:color var(--dur) var(--ease)}
+.rub2 .r-n::after{content:"→"; display:inline-block; margin-left:7px; color:var(--accent);
+  transform:translateX(-2px); opacity:.55; transition:transform .18s var(--ease), opacity .18s var(--ease)}
+.rub2:hover .r-n{color:var(--text-secondary)}
+.rub2:hover .r-n::after{transform:translateX(2px); opacity:1}
+
+/* ---- home: naked rubric cards (params.home.rubricCards = "naked") ----
+   No box at all — free columns on the page (the background markup holds the
+   composition instead), the logo grown to the card's hero. Hover stays on the
+   sign and the arrow: a 1px column lift, no border, no shadow, no glow. */
+.rubs2-naked .rub2{background:transparent; border-color:transparent}
+.rubs2-naked .rub2:hover{border-color:transparent; box-shadow:none; transform:translateY(-1px)}
+.rubs2-naked .rub2 .r-logo{width:112px; height:112px}
+@media (prefers-reduced-motion:reduce){ .rubs2-naked .rub2:hover{transform:none} }
+
+/* ---- home: featured guide ("guide of the week") ---- */
+.featured{display:grid; grid-template-columns:minmax(0,1fr) 430px; gap:44px; align-items:center;
+  margin-top:14px; padding:30px 34px; border:1px solid var(--border); border-radius:16px;
+  background:var(--bg-surface)}
+@media(max-width:1020px){.featured{grid-template-columns:1fr; gap:26px; padding:24px}}
+.featured .f-k{display:flex; gap:12px; flex-wrap:wrap; font-family:var(--font-mono); font-size:11px; color:var(--text-muted); margin-bottom:12px}
+.featured .f-k a{color:var(--accent); border:0}
+.featured .f-k a:hover{border-bottom:1px solid var(--accent)}
+.featured .f-t{font-size:26px; line-height:1.2; font-weight:750; letter-spacing:-.015em; margin:0 0 10px; padding:0; border:0}
+.featured .f-t a{color:var(--text-strong); border:0; transition:color var(--dur) var(--ease)}
+.featured .f-t a:hover{color:var(--accent)}
+.featured .f-s{font-size:15px; color:var(--text-secondary); line-height:1.65; margin:0 0 20px; max-width:56ch}
+.featured .w-root{padding:18px; background:var(--bg-base)}
+
+/* compact info cards (lab: planned sandboxes) */
+.rubs{display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin:26px 0 0}
+@media(max-width:880px){.rubs{grid-template-columns:1fr}}
+.rub{display:block; padding:18px 20px; border:1px solid var(--border); border-radius:var(--radius); background:var(--bg-surface); color:var(--text-primary); transition:border-color var(--dur) var(--ease)}
+.rub:hover{border-color:var(--accent)}
+.rub .r-k{display:block; font-family:var(--font-mono); font-size:10.5px; letter-spacing:.1em; text-transform:uppercase; color:var(--accent); margin-bottom:8px}
+.rub .r-t{font-size:17px; font-weight:650; color:var(--text-strong); margin:0 0 6px; display:block}
+.rub .r-d{margin:0; font-size:13.5px; color:var(--text-secondary); line-height:1.55}
+.rub .r-m{display:block; margin-top:12px; font-family:var(--font-mono); font-size:11px; color:var(--text-muted)}
+.rub .r-m b{color:var(--text-secondary); font-weight:600}
+/* section headers on wide pages */
+.sec-h{display:flex; align-items:baseline; gap:14px; margin:56px 0 10px; font-family:var(--font-mono); font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:var(--text-muted)}
+.sec-h::after{content:""; flex:1; height:1px; background:linear-gradient(90deg, var(--border), transparent)}
+.sec-h a{color:var(--text-muted); border:0} .sec-h a:hover{color:var(--accent)}
+/* post feed. Each post is an <article>: meta chips are their own links,
+   so no giant nested anchor and no stray hover underline across the row.
+   The meta row is a ROW, not a pile: five items at one size, one weight and a
+   flat gap read as a single grey smear, so they are grouped instead — the
+   rubric is the only accent, hairline cuts split item from item (the article
+   head's own device, .meta .tag::after in 02-article-head.css), and the tags
+   are pushed to the far edge with margin-left:auto. That last move is also
+   what squares the card: the row now ends where the cover ends, so the banner
+   stops looking shifted right against text that never reaches it. Nothing
+   rules the row off underneath — a full-width hairline there is identical to
+   the one BETWEEN posts, and two equal lines per card leave the reader
+   guessing which one ends what. */
+.feed{max-width:820px}
+.post{padding:26px 2px 28px; border-bottom:1px solid var(--border)}
+.post:last-child{border-bottom:0}
+.post .p-m{display:flex; flex-wrap:wrap; align-items:center; row-gap:9px; column-gap:11px; font-family:var(--font-mono); font-size:11.5px; color:var(--text-muted); margin-bottom:15px}
+/* every leaf of the row, whether it sits in the row itself or in a group — the
+   cut below is a flex item of the thing it trails, and on an inline box it has
+   no box to be sized in */
+.post .p-m > *, .post .p-m .p-g > *{display:inline-flex; align-items:center; line-height:1}
+/* the cut sits INSIDE the item it follows, offset by the column gap, so the
+   space reads the same on both of its sides */
+.post .p-m .p-cut::after{content:""; flex:0 0 auto; width:1px; height:11px; margin-left:11px; background:var(--border)}
+/* a group (post.html) carries the same gap the row does, so an item inside one
+   is spaced exactly like an item that is not — the grouping is a wrapping
+   instruction, not a look. It may still wrap inside itself if a rubric and a
+   series name together outrun the card; that is a soft landing, not a layout. */
+.post .p-m .p-g{flex-wrap:wrap; column-gap:11px; row-gap:9px}
+.post .p-m a{border:0; transition:color var(--dur) var(--ease)}
+.post .p-m a.pr{color:var(--accent)}
+.post .p-m a.pr:hover{color:var(--accent-gold)}
+.post .p-m a.ps{color:var(--text-secondary)}
+.post .p-m a.ps:hover{color:var(--accent)}
+/* the row is a flex box, so the template's spaces between tags collapse —
+   the gap has to be drawn, not typed */
+.post .p-tags{margin-left:auto; letter-spacing:.02em}
+.post .p-tags a + a{margin-left:7px}
+/* On a phone the row cannot hold five items, so it is not asked to pretend:
+   each group takes a line of its own, and the tags — which lost their
+   margin-left:auto with the row that justified them — take a third. Rows the
+   width decides are ragged; rows the meaning decides are not.
+   A trailing cut that ends a line is a separator with nothing on its far side,
+   so the last item of a group drops it. It is safe to drop unconditionally
+   here: the groups are full-width, so that item always ends the line. The tags
+   sit a little further down than the two lines sit from each other — they
+   answer a different question than "what is this, and how long". */
+@media(max-width:640px){
+  .post .p-m > .p-g{flex-basis:100%}
+  .post .p-m .p-g > :last-child::after{display:none}
+  .post .p-tags{margin-left:0; width:100%; margin-top:4px}
+}
+.post .p-tags a{color:var(--text-muted); border:0; transition:color var(--dur) var(--ease)}
+.post .p-tags a:hover{color:var(--accent)}
+.post .p-t{margin:0; padding:0; border:0; font-size:18.5px; font-weight:650; letter-spacing:-.01em; line-height:1.3}
+.post .p-t a{color:var(--text-primary); border:0; transition:color var(--dur) var(--ease)}
+.post .p-t a:hover{color:var(--accent)}
+.post .p-s{display:block; margin:5px 0 0; font-size:14px; color:var(--text-secondary); line-height:1.6; max-width:72ch}
+/* ---- feed: long previews (params.home.feedPreview = "summary") ----
+   .p-lead is the article's own lead (rendered .Summary, see post.html) with a
+   quiet "read →" tail. .feed-long narrows the column so the 15px lead holds a
+   ~75-char measure; the title gains 2px to keep dominating the bigger mass.
+   The narrowed column is CENTRED: left in the flow it flushes to the shell's
+   left edge and leaves ~360px of dead space on the right, which reads as a
+   broken layout rather than as margin — the more so under a centred hero. The
+   heading above it (a sibling, hence :has) takes the same measure so the two
+   share their edges. */
+:root{--feed-measure:740px}
+/* the feed opens on a rule, not a heading — centred, fading out at both ends.
+   It also carries the vertical break the heading used to hold: without it the
+   tiles above would sit straight on the first card. */
+/* the margins look lopsided if taken literally: the tiles end on 24px of card
+   padding, so the same number reads bigger above the rule than below it. These
+   two are tuned to the INK — from the counter line above, to the meta line
+   below — not to the boxes. */
+.feed-sep{height:1px; margin:30px auto 34px;
+  background:linear-gradient(90deg, transparent, var(--border) 16%, var(--border) 84%, transparent)}
+.feed-sep:has(+ .feed-long){max-width:var(--feed-measure)}
+.feed-long{max-width:var(--feed-measure); margin-inline:auto}
+.sec-h:has(+ .feed-long){max-width:var(--feed-measure); margin-inline:auto}
+.feed-long .p-t{font-size:20px}
+/* A card's summary is prose, not a caption — it is the article's own opening
+   sentences. Set in the secondary tone it reads as greyed-out beside the title,
+   and the grey next to it makes the title look brighter than it is. Size and
+   weight already separate the two. Same call as .lead (02-article-head). */
+.p-lead p{margin:7px 0 0; font-size:15px; line-height:1.66; color:var(--text-primary); max-width:74ch}
+.p-lead code{font-family:var(--font-mono); font-size:.84em; padding:1px 5px; border-radius:5px;
+  background:color-mix(in srgb, var(--text-primary) 9%, transparent)}
+/* An article that opens with a cover brings it into the feed. The image hook
+   stamps intrinsic width/height, so it must be fitted to the column here or it
+   blows the layout open. Same for anything else a lead can carry. */
+.p-lead img, .p-lead svg{display:block; max-width:100%; height:auto; margin:11px 0 4px;
+  border-radius:10px; border:1px solid var(--border)}
+/* Same edge the article's own cover gets on a light canvas (12-article-layout):
+   the picture's light field and the page's meet, and the hairline is not enough
+   to say where one ends. Both feed shapes — the plain lead picture and the
+   banner crop, whose frame lives on the wrapping link, not the img. */
+[data-scheme="light"] .p-lead img,
+[data-scheme="light"] .post .p-cover{border-color:var(--text-ghost)}
+.p-lead .figure{display:block}
+.p-lead .figcaption{display:block; margin:2px 0 0; font-size:12px; color:var(--text-muted)}
+.p-lead pre, .p-lead table{display:block; max-width:100%; overflow-x:auto}
+/* ---- feed: banner cover (params.home.feedCover = "banner") ----
+   A card that has a picture wears it as a band across the top, above the meta
+   line — the card's roof, not an illustration wedged into the prose. The frame
+   owns the shape: `aspect-ratio` reserves the box before the file arrives (no
+   layout shift on a lazy image), and the image fills it with object-fit, so a
+   portrait screenshot and a wide diagram produce the SAME band. A site that
+   wants a different band retunes one variable, and the templates never learn
+   about it — which is why the crop is here and not baked into the file.
+   On hover the image scales INSIDE the frame: overflow is hidden and only the
+   <img> transforms, so the card's edges — and the text below them — never
+   move. Touch devices have no hover to undo, so (hover:hover) gates the zoom
+   the same way it gates the dimming in 03-typography.css. */
+:root{--feed-cover-ratio:3 / 1}
+.post .p-cover{display:block; overflow:hidden; border:1px solid var(--border); border-radius:var(--radius);
+  aspect-ratio:var(--feed-cover-ratio); margin:0 0 18px; background:var(--bg-surface)}
+.post .p-cover img{display:block; width:100%; height:100%; object-fit:cover; margin:0; border:0; border-radius:0;
+  transition:transform .32s var(--ease), filter .32s ease-out}
+@media (hover:hover){ .post .p-cover:hover img{transform:scale(1.04)} }
+@media (prefers-reduced-motion:reduce){
+  .post .p-cover img{transition:none}
+  .post .p-cover:hover img{transform:none}
+}
+/* One ratio at every width, and no narrow-screen override. A taller band there
+   (it was 2.2/1) is taller RELATIVE TO ITS WIDTH, so object-fit paid for the
+   extra height by eating ~13% off each side of a 3:1 drawing — on the phone,
+   where the picture is already smallest, it lost the labels sitting at its
+   edges. Keeping 3/1 shows the whole cover and takes ~45px off the card. */
+/* The tail link is a link, not a button: no frame, no fill. It only grew a
+   size (12 → 13.5px) so it stops reading as one more meta chip. At rest it
+   carries no rule — the underline belongs to hover, and to the WORD: it is set
+   on the inner span because a decoration on the <a> propagates to the arrow
+   too. The arrow is the one moving part. */
+.p-more-w{margin:16px 0 0}
+.p-more{display:inline-flex; align-items:baseline; gap:7px; font-family:var(--font-mono);
+  font-size:13.5px; color:var(--accent); border:0}
+.p-more .tx{text-decoration-line:underline; text-decoration-thickness:1px;
+  text-decoration-color:transparent; text-underline-offset:4px;
+  transition:text-decoration-color var(--dur) var(--ease)}
+.p-more:hover .tx{text-decoration-color:var(--accent)}
+.p-more .ar{display:inline-block; transition:transform .18s var(--ease)}
+.p-more:hover .ar{transform:translateX(3px)}
+@media (prefers-reduced-motion:reduce){ .p-more:hover .ar{transform:none} }
+.feed-more[hidden]{display:none}
+.feed-btn{display:flex; align-items:center; justify-content:center; gap:8px; width:100%;
+  margin:6px 0 0; padding:12px; background:none; border:0; border-radius:10px;
+  font-family:var(--font-mono); font-size:12px; color:var(--text-muted); cursor:pointer;
+  transition:color var(--dur) var(--ease), background var(--dur) var(--ease)}
+.feed-btn:hover{color:var(--accent); background:var(--bg-surface)}
+.feed-btn:focus-visible{outline:2px solid var(--accent); outline-offset:2px}
+
+/* ---- light scheme: lift the home page's secondary ink one step ----
+   Muted rows tuned on dark canvases wash out on white (the same Weber
+   flattening the grid ink gets): kicker, card subtopics/counters, section
+   labels and feed meta all drifted to "faded page". One ramp step restores
+   presence without turning labels into content — article pages keep their
+   ramp untouched. */
+[data-scheme="light"] .hero-line{color:var(--text-secondary)}
+[data-scheme="light"] .hero-line .sat{color:var(--text-primary)}
+[data-scheme="light"] .rub2 .r-d{color:var(--text-secondary)}
+[data-scheme="light"] .rub2 .r-n{color:var(--text-secondary)}
+[data-scheme="light"] .rub2:hover .r-n{color:var(--text-primary)}
+[data-scheme="light"] .sec-h{color:var(--text-secondary)}
+[data-scheme="light"] .sec-h a{color:var(--text-secondary)}
+[data-scheme="light"] .post .p-m{color:var(--text-secondary)}
+[data-scheme="light"] .post .p-tags a{color:var(--text-secondary)}
+
+/* ---- home on one column (<=880px): rubrics become rows, not towers ----
+   The showcase is a three-column composition, and its vertical budget is
+   generous BECAUSE the three cards spend it side by side: scene, kicker and
+   all three rubrics land on one screen, with the feed right under them. Below
+   880px the grid drops to a single column (see .rubs2 above) and that same
+   budget turns into ~290px per rubric — three full-height glyph towers the
+   reader has to thumb past before the first guide title appears. That is what
+   made the page read as broken on a phone rather than as spacious.
+
+   The fix is a different composition, not a smaller copy of the wide one: the
+   glyph keeps being the card's hero but moves to the LEFT of its words, and
+   the three text lines stack beside it. Same information, ~110px per rubric
+   instead of ~290px, and the whole row is one comfortable tap target. The
+   text also returns to the reading edge — centred text beside a left-hand
+   glyph has no axis to sit on. */
+@media(max-width:880px){
+  .rubs2{gap:4px}
+  .rub2{display:grid; grid-template-columns:auto minmax(0,1fr); align-items:center;
+    column-gap:20px; row-gap:0; text-align:left; padding:16px 6px}
+  .rub2 .r-txt{display:flex; flex-direction:column; gap:3px; min-width:0}
+  .rubs2-naked .rub2 .r-logo,
+  .rub2 .r-logo{width:72px; height:72px; margin-bottom:0; flex:0 0 auto}
+  /* the counter is the row's caption, not a call to action of its own: the
+     wide card's 14px lift would break the text column's tight rhythm */
+  .rub2 .r-n{margin-top:5px}
+  /* a row is wide and short — the column lift reads as a twitch on it, and a
+     touch screen has no hover state to undo it with */
+  .rubs2-naked .rub2:hover{transform:none}
+}
+
+/* ---- home on a phone (<=560px): tighten the scene's own rhythm ----
+   The rows above already bought back most of the screen; what is left is the
+   air the wide scene is built on. 56px of nothing under a 60px sticky header
+   is a lot of empty phone, the glyph can lose a step, and the kicker needs to
+   own its second line. */
+@media(max-width:560px){
+  .hero-head{padding-top:30px}
+  .hh-inner{gap:12px}
+  .hh-mascot svg{height:60px}
+  /* The kicker becomes two lines on purpose instead of two lines by accident.
+     A wrapped flex row would centre each line on its own, and the first line
+     carries the accent dot — so the two phrases would sit on two different
+     axes, off by the dot's width. A two-column grid instead HANGS the dot in
+     its own column and lets both phrases share the second one: they start on
+     the same vertical, the pair is centred as a block, and the dot marks the
+     kicker without pushing it around. The middle text node of .hero-line is an
+     anonymous grid item, which is why only the dot and .sat are placed by hand.
+     The leading "·" of the clause goes: at the head of a line it divides
+     nothing. */
+  .hero-head + .hero-line{display:grid; grid-template-columns:auto auto;
+    justify-content:center; align-items:center; column-gap:9px; row-gap:5px;
+    padding:16px 0 0}
+  .hero-head + .hero-line .dot{grid-column:1; grid-row:1}
+  .hero-head + .hero-line .sat{grid-column:2; grid-row:2; justify-self:start}
+  .hero-line .sat-sep{display:none}
+  .hero-head ~ .rubs2{margin-top:26px}
+  /* every pixel the row does not spend on padding or on the gutter goes to the
+     text column: at 360px the subtopics line ("memory · scheduler · GC") is
+     within a few characters of wrapping, and a wrap there leaves a separator
+     dangling at the end of the line */
+  .rub2{padding:14px 2px; column-gap:16px}
+  .rubs2-naked .rub2 .r-logo,
+  .rub2 .r-logo{width:64px; height:64px}
+  .rub2 .r-t{font-size:18px}
+  .rub2 .r-d{font-size:11px}
+}

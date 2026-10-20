@@ -1,0 +1,42 @@
+{{- /* Coming-soon mode (params.comingSoon.enable): the site answers every route
+       with a single standalone card and nothing else. The branch sits here, at
+       the one gate every HTML kind passes through, so head.html is never
+       reached — no CSS bundle, no search, no menus, no OG graph. Nothing leaks
+       into the published source because nothing runs, not because we stripped
+       it afterwards. Pair it with disableKinds so the build emits only the home
+       page and 404 (see docs/params.md). */ -}}
+{{- if site.Params.comingSoon.enable -}}
+{{- partial "coming-soon.html" . -}}
+{{- else -}}
+<!DOCTYPE html>
+{{- /* data-scheme mirrors the palette's `light` flag (data/themes/<id>.toml) so
+       CSS can address all light palettes at once; prefs.js / view.js keep it in
+       sync when the reader switches away from the default. */ -}}
+{{- $dt := site.Params.defaultTheme | default "taiga" -}}
+<html lang="{{ .Language.LanguageCode }}" data-theme="{{ $dt }}" data-scheme="{{ if (index site.Data.themes $dt).light }}light{{ else }}dark{{ end }}">
+<head>
+{{- partial "head.html" . -}}
+</head>
+{{- /* body class drives rail composition and the popover's "view" section:
+       `article` = a guide (leaf page in a rubric), `rubric` = a rubric index,
+       `series` = a series landing (a rubric's sub-section) — it keeps the
+       default look; the data-rubvar list variants stay scoped to .rubric. */ -}}
+{{- $body := "" -}}
+{{- if eq .Kind "section" -}}{{ $body = cond .Parent.IsHome "rubric" "series" }}
+{{- else if and (eq .Kind "page") (in (partialCached "guide-sections.html" .) .Section) -}}{{ $body = "article" }}
+{{- end -}}
+<body{{ with $body }} class="{{ . }}"{{ end }}>
+{{- /* Both chrome partials are per-language: menus, i18n strings and the footer's
+       feed link all differ, so without .Lang in the variant /howto/ and /ru/howto/
+       would share one cache entry and the loser would render in the wrong language.
+       The header takes a third variant on a multilingual site only: its language
+       switcher points at THIS page's translation, which is not constant within a
+       section — a single-language site keeps caching one header per section. */ -}}
+{{- $multi := gt (len site.Languages) 1 -}}
+{{ partialCached "header.html" . .Language.Lang (or .Section .RelPermalink) (cond $multi .RelPermalink "") }}
+{{ block "main" . }}{{ end }}
+{{ partialCached "footer.html" . .Language.Lang }}
+{{ partial "scripts.html" . }}
+</body>
+</html>
+{{- end -}}

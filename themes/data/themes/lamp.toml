@@ -1,0 +1,35 @@
+name = { en = "Lamp", ru = "Лампа" }
+weight = 20
+group = { en = "Originals", ru = "Свои" }
+
+# surface / text ramp (swapped per theme)
+"bg-deep" = "#16140f"
+"bg-base" = "#1c1a14"
+"bg-surface" = "#26231b"
+"bg-raised" = "#302d24"
+"bg-hover" = "#2c2921"
+"border" = "#38342b"
+"text-primary" = "#ded0c5"   # was #d9d2c4 (de-mud: hue ~90deg -> ~72deg, drop the yellow cast)
+"text-secondary" = "#c6baaf" # was #c2bbae (de-mud)
+"text-muted" = "#988c81"     # was #948d80 (de-mud)
+"text-ghost" = "#6c665b"
+"text-strong" = "#e6dfd2"
+"gtok-str" = "#cbb279"
+
+# brand accents (constant across built-in palettes; overridable)
+"accent" = "#55c0b7"
+"accent-dim" = "rgba(85,192,183,.18)"
+"accent-glow" = "rgba(85,192,183,.28)"
+"accent-green" = "#a8c954"
+"accent-green-dim" = "rgba(168,201,84,.16)"
+"accent-green-glow" = "rgba(168,201,84,.22)"
+"accent-copper" = "#c87a42"
+"accent-copper-dim" = "rgba(200,122,66,.18)"
+"accent-blue" = "#6ba4c9"
+"accent-blue-dim" = "rgba(107,164,201,.16)"
+"accent-gold" = "#d4a24e"
+"accent-gold-dim" = "rgba(212,162,78,.18)"
+"accent-red" = "#d2695a"
+"accent-red-dim" = "rgba(210,105,90,.16)"
+"accent-violet" = "#a48bd4"
+"accent-violet-dim" = "rgba(164,139,212,.16)"

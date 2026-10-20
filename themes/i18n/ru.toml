@@ -1,0 +1,643 @@
+# UI strings for templates. Content is authored in content/ and data/; this file
+# is only chrome. A site overrides any key by shipping its own i18n/ru.toml.
+
+[to_home]
+other = "на главную"
+[nav_rubrics]
+other = "Рубрики"
+# accessible name of the burger that carries the rubric nav on a narrow screen
+[nav_menu]
+other = "Меню разделов"
+[search]
+other = "Поиск"
+[repo_link]
+other = "Исходный код"
+[search_label]
+other = "поиск"
+[lang_switch]
+other = "Язык"
+
+# footer feed link (the other footer labels are the site's menus.footer entries)
+[foot_rss]
+other = "rss"
+# Accessible name of the footer's link row. A <nav> is a landmark, and a
+# reader jumping between landmarks hears only the name — "footer" is where
+# it is, not what is in it.
+[foot_nav_aria]
+other = "Ссылки сайта"
+
+# 404
+[nf_kicker]
+other = "404 · страница не найдена"
+[nf_title]
+other = "Такой страницы нет."
+[nf_line]
+other = "Но есть три рубрики — начни с любой."
+[nf_home]
+other = "← на главную"
+
+# reading-time and feed plurals (CLDR ru: one/few/many), used from phase 03 on
+[minutes]
+one = "{{ .Count }} минута"
+few = "{{ .Count }} минуты"
+many = "{{ .Count }} минут"
+other = "{{ .Count }} минуты"
+
+[guides_left]
+one = "ещё {{ .Count }} гайд"
+few = "ещё {{ .Count }} гайда"
+many = "ещё {{ .Count }} гайдов"
+other = "ещё {{ .Count }} гайда"
+
+[parts_count]
+one = "{{ .Count }} часть"
+few = "{{ .Count }} части"
+many = "{{ .Count }} частей"
+other = "{{ .Count }} части"
+
+[words]
+one = "{{ .Count }} слово"
+few = "{{ .Count }} слова"
+many = "{{ .Count }} слов"
+other = "{{ .Count }} слова"
+
+[part_of]
+other = "часть {{ .N }} из {{ .M }}"
+
+# ── article machinery (phase 02) ─────────────────────────────────────────────
+
+# render-heading hook: hash-anchor aria-labels
+[anchor_sec]
+other = "Якорь на раздел"
+[anchor_sub]
+other = "Якорь на подраздел"
+
+# callout default labels (per-callout override with label=)
+[callout_key]
+other = "Главная мысль"
+[callout_trap]
+other = "Ловушка"
+[callout_internals]
+other = "Под капотом"
+[callout_note]
+other = "Историческая сноска"
+[callout_warn]
+other = "Внимание"
+
+# widget figure caption
+[widget_cap]
+other = "Поиграй"
+
+# inline table of contents + rails
+[toc_heading]
+other = "Содержание"
+[rail_l_aria]
+other = "Навигация по серии"
+[rail_r_aria]
+other = "Оглавление страницы"
+[rail_r_head]
+other = "Содержание"
+[rail_hide_l]
+other = "Свернуть"
+[rail_hide_r]
+other = "Свернуть"
+[rail_related]
+other = "ещё по теме"
+
+# article meta chips
+[meta_tested_on]
+other = "проверено на"
+[meta_interactive]
+other = "интерактив"
+[mins_abbr]
+other = "мин"
+
+# kicker: non-series article ("<рубрика> · разбор")
+[kicker_standalone]
+other = "разбор"
+
+# series header word (kicker/rail/bridge): "серия · <name>"
+[series_word]
+other = "серия"
+[all_series]
+other = "вся серия →"
+# og:title of a series landing — the only place a share card can say that the
+# link is a whole series and not one more article (head/og.html)
+[og_series_of]
+one = "серия из {{ .Count }} статьи"
+few = "серия из {{ .Count }} статей"
+many = "серия из {{ .Count }} статей"
+other = "серия из {{ .Count }} статей"
+# series landing: the "start here" CTA and the announcement teaser of a
+# series that has no published parts yet
+[series_start]
+other = "начать серию"
+[series_soon]
+other = "Серия готовится — части появятся в ленте."
+# a single announced (not-yet-published) part inside a live series
+[part_soon]
+other = "скоро"
+
+# series bridge (.sbr) — text mirrors the mock's buildSeriesBridge 1:1
+[sbr_behind]
+other = "позади <b>{{ .done }} из {{ .total }}</b>"
+[sbr_ahead]
+other = "впереди {{ .n }}"
+[parts_word]
+one = "часть"
+few = "части"
+many = "частей"
+other = "части"
+[sbr_left]
+other = "<b>~{{ .mins }} мин</b>"
+[sbr_done]
+other = "серия пройдена · <b>{{ .total }} из {{ .total }}</b>"
+[sbr_next_k]
+other = "дальше · часть {{ .n }}"
+[sbr_final_k]
+other = "финал серии"
+[sbr_final_t]
+other = "Вся серия «{{ .name }}» — выбрать, что перечитать"
+[sbr_prev]
+other = "← часть {{ .n }} · {{ .short }}"
+[sbr_seg_title]
+other = "часть {{ .n }} · {{ .short }}"
+
+# ── chrome: home, rubric, tags (phase 03) ────────────────────────────────────
+
+# home section headings + featured CTAs
+[featured_head]
+other = "гайд недели"
+[read_guide]
+other = "читать гайд"
+[featured_all]
+other = "вся серия"
+[feed_head]
+other = "лента гайдов"
+# quiet tail link under a long feed preview (params.home.feedPreview = "summary")
+[feed_read]
+other = "читать"
+
+# count plurals (CLDR ru: one/few/many + other for fractionals)
+[guides_count]
+one = "{{ .Count }} гайд"
+few = "{{ .Count }} гайда"
+many = "{{ .Count }} гайдов"
+other = "{{ .Count }} гайда"
+[series_count]
+one = "{{ .Count }} серия"
+few = "{{ .Count }} серии"
+many = "{{ .Count }} серий"
+other = "{{ .Count }} серии"
+[reviews_count]
+one = "{{ .Count }} разбор"
+few = "{{ .Count }} разбора"
+many = "{{ .Count }} разборов"
+other = "{{ .Count }} разбора"
+# rubric card with no guides yet — a muted label instead of "0 разборов"
+[rubric_empty]
+other = "готовится"
+[hours_count]
+one = "{{ .Count }} час"
+few = "{{ .Count }} часа"
+many = "{{ .Count }} часов"
+other = "{{ .Count }} часа"
+[tags_count]
+one = "{{ .Count }} тег"
+few = "{{ .Count }} тега"
+many = "{{ .Count }} тегов"
+other = "{{ .Count }} тега"
+
+# rubric page
+[rubric_word]
+other = "рубрика"
+[standalone_head]
+other = "разборы вне серий"
+# series duration: "~1,5 часа" needs a genitive hour word + a locale decimal mark
+# (the integer forms come from hours_count)
+[hours_gen]
+other = "часа"
+[decimal_sep]
+other = ","
+
+# tags page
+[tags_cloud]
+other = "облако"
+[tags_cloud_aria]
+other = "Облако тегов"
+[tags_hint]
+other = "кликни тег — подборка появится здесь · вся лента — <a href=\"{{ .home }}#feed\">на главной</a>"
+[tags_noscript]
+other = "Облако тегов собирается на лету — без JavaScript страница молчит. Вся лента гайдов есть <a href=\"{{ .home }}#feed\">на главной</a>."
+
+# roadmap shortcode section headings
+[roadmap_bar_aria]
+other = "готовность"
+[roadmap_now]
+other = "В работе"
+[roadmap_queue]
+other = "Дальше в очереди"
+[roadmap_how]
+other = "Как решаем, что писать"
+
+# ── feed dates (date.html) ───────────────────────────────────────────────────
+# Genitive short months, as the feed reads them out loud ("30 мая", not "май") —
+# no locale formatter gives that form, so the abbreviations are copy, not code.
+[month_1]
+other = "янв"
+[month_2]
+other = "фев"
+[month_3]
+other = "мар"
+[month_4]
+other = "апр"
+[month_5]
+other = "мая"
+[month_6]
+other = "июн"
+[month_7]
+other = "июл"
+[month_8]
+other = "авг"
+[month_9]
+other = "сен"
+[month_10]
+other = "окт"
+[month_11]
+other = "ноя"
+[month_12]
+other = "дек"
+
+# ── strings that live in JS ──────────────────────────────────────────────────
+# Everything below is shipped to the browser by the js-bridge partial as
+# window.THEME_I18N; modules/i18n.js merges it over its English defaults. The
+# `js_` prefix marks exactly which keys leave the server.
+
+# palette popover
+[js_theme_head]
+other = "Палитра"
+[js_popover_aria]
+other = "Палитра сайта"
+[js_pin_panel]
+other = "закрепить панель"
+[js_key_or]
+other = "или"
+
+# focus mode
+[js_focus_exit_tip]
+other = "Выйти из фокуса"
+[js_focus_title]
+other = "Фокус: только текст (F)"
+[js_focus_aria]
+other = "Фокус: скрыть панели и шапку (F)"
+
+# ⌘K search modal
+[js_search_aria]
+other = "Поиск по гайдам"
+[js_search_placeholder]
+other = "искать гайд, серию, тему…"
+[js_search_empty]
+other = "Ничего не нашлось. Попробуй «gc», «слайс», «планировщик»…"
+[js_search_unbuilt]
+other = "Индекс поиска ещё не собран. Соберётся командой pagefind --site public."
+
+# Нулевой экран модалки — то, что видно до первого символа. Две секции: что
+# читатель открывал сам и что вышло недавно. «всего N» в заголовке второй —
+# против прочтения списка как полного каталога: это пять строк из N.
+[js_search_recent]
+other = "недавно открывали"
+[js_search_latest]
+other = "новые гайды"
+[js_search_latest_total]
+other = "всего {{ .N }}"
+[js_search_hint]
+other = "ищет по тексту гайдов — «gc», «слайс», «планировщик»"
+
+# scroll-to-top button
+[js_scrolltop]
+other = "Наверх"
+
+# tags page (/tags/) filter
+[js_tag_feed_head]
+other = "лента"
+[js_tag_reset]
+other = "сбросить"
+[js_tag_empty_tail]
+other = " — такого тега нет. Проверь ссылку или выбери тему из облака выше."
+# bare plural word for the filter's "N гайдов" line: the count is only known in
+# the browser, so Hugo renders one word per probe count and Intl.PluralRules
+# picks the matching one (see modules/i18n.js plural()).
+[js_guides_word]
+one = "гайд"
+few = "гайда"
+many = "гайдов"
+other = "гайда"
+
+# runnable snippets: the editing controls next to codapi's Run button. The
+# labels stay in English on purpose — Run comes from codapi itself and cannot be
+# translated without forking it, and a half-translated row of controls reads
+# worse than a consistent one. The hint sentence is prose, so it is translated.
+# {mod} is filled in by the browser: ⌘ on a Mac, Ctrl everywhere else. The
+# hint is injected as HTML and carries the theme's own key caps —
+# <kbd class="kb">, the same ones the header's ⌘K wears.
+[js_code_edit]
+other = "Edit"
+[js_code_close]
+other = "Close"
+[js_code_reset]
+other = "Reset"
+[js_code_hint]
+other = "<kbd class=\"kb\">{mod} + Enter</kbd> запустить · <kbd class=\"kb\">Esc</kbd> закрыть"
+[js_code_aria]
+other = "Редактируемый код"
+
+# кнопка копирования листинга. Она без подписи, поэтому js_copy_code — всё её
+# доступное имя: название действия, а не его исхода. Остальные два и есть исход:
+# смена иконки скринридеру ничего не говорит, поэтому результат объявляется через
+# live-регион (modules/codecopy.js). Это проза — в отличие от Edit/Close/Reset
+# выше её ничто не привязывает к английскому, и она переведена.
+[js_copy_code]
+other = "Скопировать код"
+[js_copy_done]
+other = "Код скопирован в буфер обмена"
+[js_copy_fail]
+other = "Не удалось скопировать код"
+
+# run shortcode: the provenance line of the output block. run_example labels the
+# output the AUTHOR recorded, run_ok / run_failed the one the READER just got
+# (each followed by the duration), run_restore brings the author's back. These
+# ARE prose — unlike the control labels above — so they are translated. The
+# status line beside Run stays codapi's own English; a site that wants it
+# translated passes status-running / status-done / status-failed to the
+# shortcode.
+[run_example]
+other = "пример"
+[run_ok]
+other = "запуск"
+[run_failed]
+other = "ошибка"
+[run_restore]
+other = "вернуть пример"
+[run_empty]
+other = "(пусто)"
+
+# term shortcode: the definition card's footer link and its no-JS appendix.
+# term_more is the default text of the optional "read more" link (per-term
+# override with more=); the rest label the appendix that JS takes away.
+[term_more]
+other = "читать подробнее"
+[term_back]
+other = "← назад к тексту"
+[term_cards_head]
+other = "Определения"
+[term_cards_aria]
+other = "Определения терминов из статьи"
+
+# ── link previews (24-linkpreview.css / modules/linkpreview.js) ───────────────
+# Всё рендерится на сервере — в превью-фрагмент и в пререндеренные tg/yt-карточки.
+[lp_read]
+other = "Читать статью"
+[lp_to_section]
+other = "К разделу"
+[lp_further]
+other = "Дальше в статье"
+[lp_of]
+other = "из"
+[lp_open_series]
+other = "Открыть серию"
+[lp_articles]
+one = "{{ .Count }} статья"
+few = "{{ .Count }} статьи"
+many = "{{ .Count }} статей"
+other = "{{ .Count }} статьи"
+[lp_more_parts]
+one = "…ещё {{ .Count }} часть"
+few = "…ещё {{ .Count }} части"
+many = "…ещё {{ .Count }} частей"
+other = "…ещё {{ .Count }} части"
+[lp_widget]
+other = "Интерактивная схема"
+[lp_run]
+other = "запускается в статье"
+[lp_open_post]
+other = "Открыть пост в Telegram"
+[lp_open_channel]
+other = "Открыть канал в Telegram"
+[lp_subs_word]
+one = "подписчик"
+few = "подписчика"
+many = "подписчиков"
+other = "подписчика"
+[lp_watch_yt]
+other = "Смотреть на YouTube"
+[lp_views]
+other = "просмотров"
+[lp_today]
+other = "сегодня"
+[lp_yesterday]
+other = "вчера"
+[lp_wikipedia]
+other = "Википедия"
+[lp_read_wiki]
+other = "Читать в Википедии"
+[lp_read_gob]
+other = "Читать в блоге Go"
+[lp_read_gdoc]
+other = "Читать на go.dev"
+
+# ── newsletter (28-newsletter.css / modules/newsletter.js) ────────────────────
+# Подписка на рассылку: кнопка в шапке с поповером, блоки в статьях и на
+# лендинге серии, ссылка в футере. Ключи nl_msg_* / nl_again живут в JS —
+# js-bridge.html отдаёт их как window.THEME_I18N.nlMsg* (см. docs/i18n.md).
+# Длинные тексты (страница подписки, тексты блоков в конкретных статьях) —
+# контент сайта, здесь их нет намеренно.
+[nl_btn_aria]
+other = "Подписка на новые статьи"
+[nl_btn_tip]
+other = "Подписка"
+[nl_pop_head]
+other = "Подписка на новые статьи"
+[nl_pop_more]
+other = "Подробнее"
+# Короткий намеренно: поле в поповере шапки — самое узкое место всей фичи, и
+# правый край там отдан под кнопку, которую впрыскивают расширения-менеджеры
+# паролей (см. .nl-field в 28-newsletter.css). "you@example.com" в остаток не
+# помещался и обрезался на хвосте.
+[nl_placeholder]
+other = "your@mail.com"
+[nl_field_aria]
+other = "Адрес почты"
+[nl_go]
+other = "Подписаться"
+[nl_note_short]
+other = "Только новые статьи и большие апдейты. Отписка в один клик."
+[nl_cta_title]
+other = "Дальше — по почте"
+[nl_cta_body]
+other = "Новые гайды выходят нечасто. Оставьте адрес — пришлю письмо, когда будет что читать."
+[nl_series_body]
+other = "Серия активно дописывается. Оставьте почту — пришлю письмо, когда выйдет следующая часть."
+[nl_block_aria]
+other = "Подписка на рассылку"
+[nl_dismiss_tip]
+other = "Свернуть этот блок"
+# От свёрнутого блока остаётся одна тихая строка, чтобы читатель мог
+# развернуть форму обратно. nl_ghost_restore — ссылка в этой строке.
+[nl_ghost]
+other = "Форма подписки свёрнута"
+[nl_ghost_restore]
+other = "вернуть"
+[nl_ghost_aria]
+other = "Свёрнутая форма подписки"
+[nl_restore_tip]
+other = "Вернуть форму подписки"
+# Показывается вместо формы, когда в этом браузере подписка уже завершилась.
+# Флаг — булев, в localStorage; сам адрес не сохраняется никогда.
+[nl_subscribed]
+other = "Вы подписаны — пришлю письмо, когда выйдет новое."
+[nl_subscribed_pop]
+other = "Вы подписаны."
+[nl_sub_other]
+other = "подписать другой адрес"
+[nl_foot_link]
+other = "подписка"
+[nl_archive_title]
+other = "Архив выпусков"
+[nl_archive_sub]
+other = "Все письма открыты и читаются без подписки."
+[nl_letter_inbox]
+other = "Входящие"
+# Образец письма повторяет боевой футер кампании, поэтому эти четыре строки
+# читаются ровно как в отправляющем шаблоне. Меняются только вместе с ним.
+# В nl_letter_reply {from} подставляется именем отправителя из шорткода.
+#
+# nl_letter_unsub — «отписаться», без «в один клик», и это НЕ рассинхрон с
+# nl_note_short выше. В форме «отписка в один клик» — обещание ДО подписки,
+# оно снимает страх «потом не выпутаюсь». В письме читатель уже подписан:
+# ему нужна дверь, а не реклама её лёгкости. Не унифицировать.
+[nl_letter_why]
+other = "Вы получили это письмо, потому что подписались на рассылку {site}."
+[nl_letter_unsub]
+other = "отписаться"
+[nl_letter_browser]
+other = "открыть в браузере"
+[nl_letter_reply]
+other = "{from}. На письмо можно ответить — я прочитаю."
+[nl_letter_to]
+other = "кому: вам"
+# JS-строки формы (modules/newsletter.js). В nl_msg_ok {email} подставляется
+# адресом, который ввёл читатель, и выделяется жирным. Ключи *_hint — вторая,
+# тихая строка под статусом; в nl_msg_fail_hint {email} — это адрес автора
+# (params.newsletter.contactEmail), он становится ссылкой mailto, и без него
+# строка не рендерится вовсе.
+[nl_msg_empty]
+other = "Введите адрес почты."
+[nl_msg_typo]
+other = "Похоже, в адресе опечатка — проверьте его."
+[nl_msg_fail]
+other = "Не получилось — попробуйте ещё раз."
+# Не отмазка, а единственный выход из легитимного тупика: адрес, который список
+# заблокировал после отбивки письма, будет получать ту же ошибку на каждой
+# попытке, и «попробуйте ещё раз» ему уже не поможет.
+[nl_msg_fail_hint]
+other = "Повторяется? Напишите мне: {email}"
+[nl_msg_ok]
+other = "Письмо с подтверждением отправлено на {email}. Перейдите по ссылке из письма — и всё."
+# Письмо уходит на каждую повторную попытку, так что подсказка честная: если его
+# не видно, оно почти наверняка в спаме.
+[nl_msg_ok_hint]
+other = "Если письма нет — загляните в спам."
+[nl_again]
+other = "указать другой адрес"
+
+# ── comments (29-comments.css / modules/comments.js) ─────────────────────────
+# Строки блока комментариев (Comentario). Ключи js_cmnt_* уезжают в бандл через
+# js-bridge.html как window.THEME_I18N.cmnt* (см. docs/i18n.md); cmnt_head
+# рендерит Hugo прямо в разметку.
+[cmnt_head]
+other = "Обсуждение"
+
+# Число рядом с заголовком, когда нить пуста. Появляется только после того, как
+# движок отрисовался: до этого пустая нить и незагруженная выглядят снаружи
+# одинаково, а «пока пусто» — утверждение, а не заглушка.
+[js_cmnt_none]
+other = "пока пусто"
+
+# Единственный отказ, о котором движок сообщить не в состоянии: его собственный
+# бандл не доехал. Обо всём остальном он рассказывает сам.
+[js_cmnt_error]
+other = "Не удалось загрузить комментарии."
+[js_cmnt_retry]
+other = "Попробовать снова"
+
+# Порядок сортировки нити. Движок даёт четыре порядка тремя кнопками: кнопка
+# оценки после выбора превращается в тумблер, и единственным признаком второго
+# состояния была повёрнутая каретка 8×8 — её никто не замечает. Подписи ниже
+# заменяют штатные («Оценка · Старые · Новые» — это критерий плюс два значения,
+# а нужно три значения одного), а перевёрнутый порядок называет себя сам.
+[js_cmnt_sort_best]
+other = "Лучшие"
+[js_cmnt_sort_worst]
+other = "Худшие"
+[js_cmnt_sort_oldest]
+other = "Старые"
+[js_cmnt_sort_newest]
+other = "Новые"
+
+# Слово «комментарий» для строки в шапке блока. Движок везёт для русского ОДНУ
+# форму («комментариев»), поэтому у него выходит «1 комментариев». Формы ниже
+# уезжают в JS через js-bridge как cmntForms, а modules/comments.js подставляет
+# нужную по Intl.PluralRules — тем же приёмом, что и фильтр тегов.
+[js_cmnt_word]
+one = "комментарий"
+few = "комментария"
+many = "комментариев"
+other = "комментария"
+
+# То же для свёрнутой ветки: «2 ОТВЕТА — ПОКАЗАТЬ». Движок сворачивание рисует
+# наполовину (ответы гаснут, но остаются в потоке), поэтому и подпись наша.
+[js_cmnt_reply_word]
+one = "ответ"
+few = "ответа"
+many = "ответов"
+other = "ответа"
+[js_cmnt_show]
+other = "показать"
+
+# Форма комментария. Анонимный ввод выключен, войти можно через GitHub или
+# Google — и цена входа объявляется в момент раскрытия редактора, а не после
+# того, как читатель дописал. Метка кнопки — не обещание, а описание кода:
+# движок публикует комментарий тем же вызовом, которым заканчивает вход, и
+# черновик переживает даже редирект к провайдеру.
+[js_cmnt_write]
+other = "Написать комментарий…"
+[js_cmnt_submit]
+other = "Отправить"
+[js_cmnt_submit_in]
+other = "Войти и отправить"
+
+# Единственное действие, ради которого нить и существует, — единственное, что
+# получает слово вместо значка. Голоса остаются стрелками.
+[js_cmnt_reply]
+other = "Ответить"
+
+# Бейдж владельца домена. У движка он называется «Модератор» — роль, которую на
+# блоге одного автора никто не играет.
+[js_cmnt_author]
+other = "Автор"
+
+# Диалог входа. Движок озаглавливает его «Войти» и предваряет кнопки словами
+# «Вход через» — то есть повторяет их дважды и ни разу не объясняет, почему
+# диалог вообще появился. А появился он потому, что читатель нажал «ответить»
+# или стрелку голоса.
+[js_cmnt_login_title]
+other = "Вход"
+[js_cmnt_login_why]
+other = "Чтобы комментировать и голосовать, нужно войти"
+
+# Состояния премодерации. Она выключена, но включается галкой без рестарта —
+# день включения неподходящий, чтобы обнаружить, что состояния не нарисованы.
+[js_cmnt_pending]
+other = "ждёт модерации"
+[js_cmnt_rejected]
+other = "отклонён модератором"

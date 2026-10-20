@@ -1,0 +1,42 @@
+{{- /* Series blocks of a rubric page. One <section class="series"> per series —
+       a sub-section of the rubric — ordered by the series' own front-matter
+       weight (the default sort of .Sections). The block header links to the
+       series landing; the anchor id keeps the /<rubric>/#<series> deep links
+       working. Part count and duration sum every listed part (stubs included) so
+       they match the article kicker's "part N of M" and the series bridge. An
+       announced series with no parts yet renders as a teaser — same header, an
+       "in the works" chip instead of the list. Context = the section page; part
+       title uses .LinkTitle so a part can carry a short title (linkTitle:)
+       without touching the guide's <title>. Standalone containers
+       (params.standalone — see alist.html) are not series and are skipped. */ -}}
+{{- range .Sections -}}
+  {{- if .Params.standalone }}{{ continue }}{{ end -}}
+  {{- $pages := partialCached "series/parts.html" . .RelPermalink -}}
+  {{- $mins := 0 -}}{{ range $pages }}{{ if not .announce }}{{ $mins = add $mins .mins }}{{ end }}{{ end -}}
+<section class="series{{ if not $pages }} ser-teaser{{ end }}" id="{{ partial "series/slug.html" . }}">
+  <div class="ser-head">
+    <h2 class="ser-t"><a href="{{ .RelPermalink }}">{{ .Title }}</a></h2>
+    <span class="ser-k">{{ i18n "series_word" }}{{ with .Params.tagline }} · {{ . }}{{ end }}</span>
+    {{- if $pages }}
+    <span class="ser-m">{{ i18n "parts_count" (len $pages) }} · ~{{ partial "rubric/duration.html" $mins }}</span>
+    {{- else }}
+    <span class="ser-m">{{ i18n "rubric_empty" }}</span>
+    {{- end }}
+  </div>
+  {{- /* `lead` first, `description` as the fallback — see series/landing.html. */ -}}
+  {{- with (.Params.lead | default .Description) }}
+  <p class="ser-d">{{ . }}</p>
+  {{- end }}
+  {{- if $pages }}
+  <ol class="slist">
+    {{- range $pages }}
+    {{- if .announce }}
+    <li><span class="soon">{{ .linkTitle }}<span class="soon-tag">{{ i18n "part_soon" }}</span></span></li>
+    {{- else }}
+    <li><a href="{{ .url }}">{{ .linkTitle }} <span class="mins">{{ .mins }} {{ i18n "mins_abbr" }}</span></a></li>
+    {{- end }}
+    {{- end }}
+  </ol>
+  {{- end }}
+</section>
+{{ end -}}

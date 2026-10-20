@@ -1,0 +1,169 @@
+{{- /* Links: external (http/https) open in a new tab; mailto:/tel: pass through
+       (safeURL keeps tel: from #ZgotmplZ); pure #anchors pass through; internal
+       /paths are resolved against the content tree with site.GetPage and rewritten
+       to the canonical .RelPermalink (so links survive URL/slug changes and .html→
+       pretty). A dead internal link fails the build (params.linkcheck = "error")
+       or warns (= "warn"). GetPage takes a CONTENT path, not an output URL — write
+       internal links by content path (reference/features-recipes.md §1b).
+
+       LINK PREVIEWS (24-linkpreview.css / modules/linkpreview.js): the hook is
+       also where links are CLASSIFIED at build time. An internal link to a guide
+       or a series carries data-preview="<permalink>" so JS can fetch its build-time
+       fragment on hover. An external link gets a species mark via data-link
+       (ext | tg | yt); a t.me post from a whitelisted channel and any youtube
+       video also register their href on .Page.Store, so article/link-cards.html
+       can pre-render the hover card. All gated on params.linkPreviews.enable. */ -}}
+{{- $d := .Destination -}}
+{{- $u := urls.Parse $d -}}
+{{- $scheme := $u.Scheme -}}
+{{- $lp := site.Params.linkPreviews.enable | default false -}}
+{{- /* Opt out of link decoration (species marks + hover previews). Two knobs, both
+       honoured below: a page sets `linkMarks: false` in its params to strip marks
+       from every link on it; a single link passes "no-mark" as its title —
+       [text](href "no-mark") — to render just that one plain ("raw" also accepted).
+       The title is the quoted string AFTER the url, with nothing between:
+       [text](https://example.com "no-mark") — no stray words. Used where links are
+       calls-to-action (the support page) and the ✈/↗ marks read as clutter. */ -}}
+{{- $raw := or (eq .Page.Params.linkMarks false) (in (slice "no-mark" "raw") .Title) -}}
+{{- if $scheme -}}
+  {{- if or (eq $scheme "http") (eq $scheme "https") -}}
+    {{- if $raw -}}
+    <a href="{{ $d }}" target="_blank" rel="noopener"{{ with .Title }}{{ if not (in (slice "no-mark" "raw") .) }} title="{{ . }}"{{ end }}{{ end }}>{{ .Text | safeHTML }}</a>
+    {{- else -}}
+    {{- /* classify the outbound link: t.me / youtube get their own species mark
+           and, when previewable, register for a pre-rendered card. */ -}}
+    {{- $host := strings.TrimPrefix "www." $u.Host -}}
+    {{- $kind := "ext" -}}
+    {{- $reg := "" -}}
+    {{- /* the href/data/store value; a legacy blog.golang.org link is normalised
+           to its go.dev home (the redirect lands there anyway) so the card fetches
+           and the JS matches the canonical URL. */ -}}
+    {{- $regHref := $d -}}
+    {{- /* what the CARD is fetched and keyed by, when that is not the href itself.
+           A docs link usually points into a section — /ref/spec#Method_declarations
+           — and the card is of the whole page: keeping the fragment would fetch the
+           same page once per anchor and hand the JS a key it cannot match. Empty
+           means "same as the href". */ -}}
+    {{- $cardHref := "" -}}
+    {{- if or (eq $host "t.me") (eq $host "telegram.me") -}}
+      {{- $kind = "tg" -}}
+      {{- $seg := split (strings.TrimPrefix "/" $u.Path) "/" -}}
+      {{- $ch := index $seg 0 -}}
+      {{- $chans := site.Params.telegram.channels | default slice -}}
+      {{- if and $lp (ge (len $seg) 2) (index $seg 1) (in $chans $ch) -}}{{ $reg = "tg" }}{{- end -}}
+    {{- else if or (eq $host "youtube.com") (eq $host "youtu.be") -}}
+      {{- if or (eq $host "youtu.be") (and (eq $u.Path "/watch") ($u.Query.Get "v")) -}}
+        {{- $kind = "yt" -}}{{ if $lp }}{{ $reg = "yt" }}{{ end -}}
+      {{- end -}}
+    {{- else if or (hasSuffix $host ".wikipedia.org") (eq $host "wikipedia.org") -}}
+      {{- $kind = "wiki" -}}
+      {{- if and $lp (hasPrefix $u.Path "/wiki/") -}}{{ $reg = "wiki" }}{{- end -}}
+    {{- else if eq $host "go.dev" -}}
+      {{- if and (hasPrefix $u.Path "/blog/") (gt (len (strings.TrimPrefix "/blog/" $u.Path)) 0) -}}
+        {{- $kind = "gob" -}}{{ if $lp }}{{ $reg = "gob" }}{{ end -}}
+      {{- else -}}
+        {{- /* the documentation shelves, all built from the same page template:
+               /doc/ (release notes, Effective Go, the FAQ, tutorials, the GC and
+               PGO guides), /ref/ (spec, modules, memory model), /wiki/ and
+               /security/. Marketing pages (/learn/, /solutions/) and the tour
+               (a JS app with no prose to scrape) stay plain external links. */ -}}
+        {{- $sect := "" -}}
+        {{- range (slice "/doc/" "/ref/" "/wiki/" "/security/") -}}
+          {{- if hasPrefix $u.Path . -}}{{ $sect = . }}{{- end -}}
+        {{- end -}}
+        {{- if and $sect (gt (len (strings.TrimPrefix $sect $u.Path)) 0) -}}
+          {{- $kind = "gdoc" -}}
+          {{- if $lp -}}
+            {{- $reg = "gdoc" -}}
+            {{- $cardHref = printf "https://go.dev%s" $u.Path -}}
+          {{- end -}}
+        {{- end -}}
+      {{- end -}}
+    {{- else if eq $host "blog.golang.org" -}}
+      {{- with (strings.TrimPrefix "/" $u.Path) -}}
+        {{- $kind = "gob" -}}
+        {{- $regHref = printf "https://go.dev/blog/%s" . -}}
+        {{- if $lp }}{{ $reg = "gob" }}{{ end -}}
+      {{- end -}}
+    {{- end -}}
+    {{- $card := $cardHref | default $regHref -}}
+    {{- if $reg -}}
+      {{- $store := .Page.Store -}}
+      {{- $skey := printf "lp%s" (strings.Title $reg) -}}
+      {{- $list := $store.Get $skey | default slice -}}
+      {{- if not (in $list $card) -}}{{ $store.Set $skey ($list | append $card) }}{{- end -}}
+    {{- end -}}
+    {{- /* Keep the species mark with its word. The mark is an ::after inline-block
+           — an atomic inline — so the line breaker may leave it ALONE on the next
+           line: "…SHA-512" ends one line and a bare "w" opens the next. The same
+           break also splits a hyphenated one-word text ("где-нибудь") under it.
+
+           Nowrap therefore goes on the LINK itself (.lp-nb), because the mark is
+           the link's own pseudo-element: a nowrap span around the text would
+           still leave the break opportunity between that span and the ::after
+           after it — which is exactly how the first attempt at this failed. To
+           keep a long phrase from jumping to the next line whole, everything but
+           the last word is then handed back its normal wrapping inside .lp-w, so
+           the line can still break at the phrase's own spaces; only the tail and
+           its mark are welded together. Text carrying inline markup (code,
+           emphasis) opts out — splitting it by spaces would cut through tags —
+           and the 32-rune cap keeps a URL-as-text from becoming an unbreakable
+           run wider than a phone. */ -}}
+    {{- $txt := printf "%s" .Text -}}
+    {{- $nb := "" -}}
+    {{- if and $lp (not (strings.Contains $txt "<")) -}}
+      {{- $words := split $txt " " -}}
+      {{- $tail := index $words (sub (len $words) 1) -}}
+      {{- if le (strings.RuneCount $tail) 32 -}}
+        {{- $nb = " class=\"lp-nb\"" -}}
+        {{- if gt (len $words) 1 -}}
+          {{- $head := delimit (first (sub (len $words) 1) $words) " " -}}
+          {{- $txt = printf `<span class="lp-w">%s </span>%s` $head $tail -}}
+        {{- end -}}
+      {{- end -}}
+    {{- end -}}
+    <a href="{{ $regHref }}" target="_blank" rel="noopener"{{ $nb | safeHTMLAttr }}{{ if $lp }} data-link="{{ $kind }}"{{ with $reg }} data-{{ . }}="{{ $card }}"{{ end }}{{ end }}{{ with .Title }} title="{{ . }}"{{ end }}>{{ $txt | safeHTML }}</a>
+    {{- end -}}
+  {{- else -}}
+    <a href="{{ $d | safeURL }}"{{ with .Title }} title="{{ . }}"{{ end }}>{{ .Text | safeHTML }}</a>
+  {{- end -}}
+{{- else if hasPrefix $d "#" -}}
+  <a href="{{ $d }}"{{ with .Title }} title="{{ . }}"{{ end }}>{{ .Text | safeHTML }}</a>
+{{- else if and (hasPrefix $d "/") (path.Ext $u.Path) -}}
+  {{- /* Link to a generated/static file (RSS /index.xml, sitemap, an image or a
+         download): skip the page check — GetPage resolves content pages, not
+         output URLs. But still send it through relURL, or a root-absolute path
+         escapes the baseURL subpath: on a site served from /taiga/, a literal
+         "/index.xml" points at the domain root and 404s. relURL (not relLangURL)
+         on purpose — it rebases the path and nothing else, so a shared static
+         asset does not sprout a language prefix it does not have on disk. Write
+         the language-specific path yourself when you mean one.
+
+         The leading slash is trimmed first, and that is not cosmetic: relURL
+         leaves an already-rooted "/index.xml" alone and only rebases a relative
+         "index.xml". Feed it the slash and it silently no-ops — which is exactly
+         how this bug shipped. (footer.html writes "index.xml" for the same
+         reason.) */ -}}
+  <a href="{{ strings.TrimPrefix "/" $u.Path | relURL }}{{ with $u.Fragment }}#{{ . }}{{ end }}"{{ with $.Title }} title="{{ . }}"{{ end }}>{{ .Text | safeHTML }}</a>
+{{- else if hasPrefix $d "/" -}}
+  {{- $target := site.GetPage $u.Path -}}
+  {{- if $target -}}
+    {{- /* previewable target: a guide (kind=page in a guide section) or a series
+           (a rubric sub-section that is not a standalone container). A self-link
+           and a plain rubric/home section are not previewed. */ -}}
+    {{- $prev := "" -}}
+    {{- if and $lp (not $raw) (ne $target.RelPermalink $.Page.RelPermalink) -}}
+      {{- $guide := partialCached "guide-sections.html" . -}}
+      {{- if and (eq $target.Kind "page") (in $guide $target.Section) -}}{{ $prev = $target.RelPermalink }}
+      {{- else if and (eq $target.Kind "section") (not $target.Parent.IsHome) (not $target.Params.standalone) -}}{{ $prev = $target.RelPermalink }}
+      {{- end -}}
+    {{- end -}}
+    <a href="{{ $target.RelPermalink }}{{ with $u.Fragment }}#{{ . }}{{ end }}"{{ with $prev }} data-preview="{{ . }}"{{ end }}{{ with $.Title }} title="{{ . }}"{{ end }}>{{ .Text | safeHTML }}</a>
+  {{- else -}}
+    {{- $msg := printf "broken internal link %q on page %q" $d .Page.Path -}}
+    {{- if eq (site.Params.linkcheck | default "error") "warn" -}}{{ warnf "%s" $msg }}{{- else -}}{{ errorf "%s" $msg }}{{- end -}}
+    <a href="{{ $d }}" class="broken">{{ .Text | safeHTML }}</a>
+  {{- end -}}
+{{- else -}}
+  <a href="{{ $d }}"{{ with .Title }} title="{{ . }}"{{ end }}>{{ .Text | safeHTML }}</a>
+{{- end -}}

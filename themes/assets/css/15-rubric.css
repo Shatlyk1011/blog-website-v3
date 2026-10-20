@@ -1,0 +1,50 @@
+/* rubric page: series sections. Airy editorial blocks instead of grey plaques:
+   an amber-ruled header row + hairline list, so they read like a course index */
+.series{margin:44px 0 0}
+.series .ser-head{display:flex; align-items:baseline; gap:14px; flex-wrap:wrap; padding-bottom:12px; border-bottom:1px solid var(--border)}
+.series .ser-t{margin:0; padding:0; border:0; font-size:24px; font-weight:750; letter-spacing:-.015em; color:var(--text-strong)}
+.series .ser-t::before{content:"§"; font-family:var(--font-mono); font-weight:600; font-size:15px; color:var(--accent); margin-right:10px; vertical-align:2px}
+/* the block title links to the series landing; keep it looking like a heading */
+.series .ser-t a{color:inherit; border-bottom:0; transition:color var(--dur) var(--ease)}
+.series .ser-t a:hover{color:var(--accent)}
+.series .ser-k{font-family:var(--font-mono); font-size:10.5px; letter-spacing:.12em; text-transform:uppercase; color:var(--accent)}
+.series .ser-m{margin-left:auto; font-family:var(--font-mono); font-size:11px; color:var(--text-muted)}
+.series .ser-d{margin:12px 0 4px; font-size:14.5px; color:var(--text-secondary); line-height:1.65; max-width:66ch}
+/* intro prose, inked like prose on light — see .lead in 02-article-head */
+[data-scheme="light"] .series .ser-d{color:var(--text-primary)}
+.slist{list-style:none; counter-reset:si; margin:6px 0 0; padding:0}
+.slist li{margin:0; counter-increment:si}
+.slist li + li a{border-top:1px solid color-mix(in srgb, var(--border) 55%, transparent)}
+.slist a{display:flex; gap:14px; align-items:baseline; padding:11px 8px; border-bottom:0; border-radius:0; color:var(--text-secondary); line-height:1.45; font-size:15.5px; transition:color var(--dur) var(--ease), background var(--dur) var(--ease), padding-left .16s var(--ease)}
+.slist a::before{content:counter(si,decimal-leading-zero); font-family:var(--font-mono); font-size:11px; color:var(--text-ghost); flex:0 0 auto; transition:color var(--dur) var(--ease)}
+.slist a:hover{background:var(--bg-surface); color:var(--text-strong); padding-left:14px; border-radius:8px}
+.slist a:hover::before{color:var(--accent)}
+.slist a .mins{margin-left:auto; font-family:var(--font-mono); font-size:11px; color:var(--text-ghost); flex:0 0 auto; padding-left:12px}
+.slist a .vmark{font-size:10px; color:var(--accent-green); opacity:0; flex:0 0 auto}
+.slist a.is-visited .vmark{opacity:1}
+/* announced part: a locked, non-clickable title kept in the numbered rail. The
+   number and the hairline hang off the inner element (not the li), so mirror
+   them for .soon — minus every interactive rule: no hover, no pointer. */
+.slist .soon{display:flex; gap:14px; align-items:baseline; padding:11px 8px; color:var(--text-ghost); line-height:1.45; font-size:15.5px; cursor:default}
+.slist .soon::before{content:counter(si,decimal-leading-zero); font-family:var(--font-mono); font-size:11px; color:var(--text-ghost); flex:0 0 auto}
+.slist li + li .soon{border-top:1px solid color-mix(in srgb, var(--border) 55%, transparent)}
+/* "soon" tag, shared by the slist and the rail (.snav) locked items */
+.soon-tag{margin-left:auto; font-family:var(--font-mono); font-size:9.5px; letter-spacing:.09em; text-transform:uppercase; color:var(--text-ghost); flex:0 0 auto; padding-left:12px}
+/* announced series with no parts yet: same header, muted, no list */
+.series.ser-teaser .ser-t{color:var(--text-muted)}
+.series.ser-teaser .ser-t::before{color:var(--text-ghost)}
+.series.ser-teaser .ser-m{color:var(--text-ghost)}
+/* series landing: the parts block and its "start here" CTA */
+.ser-landing{margin-top:36px}
+.ser-start{display:inline-block; margin-top:18px; font-family:var(--font-mono); font-size:13px; color:var(--accent); border-bottom:0}
+.ser-start:hover{text-decoration:underline; text-underline-offset:4px}
+/* series landing of an announced, still-empty series */
+.ser-soon{margin-top:28px; font-size:14.5px; color:var(--text-muted); font-style:italic}
+/* standalone article list on rubric pages */
+.alist{list-style:none; margin:12px 0 0; padding:0}
+.alist li{margin:0}
+.alist a{display:block; padding:14px 2px; border:0; border-bottom:1px solid var(--border); color:var(--text-primary)}
+.alist li:last-child a{border-bottom:0}
+.alist .a-t{display:block; font-size:16.5px; font-weight:650; color:var(--text-primary); transition:color var(--dur) var(--ease)}
+.alist a:hover .a-t{color:var(--accent)}
+.alist .a-s{display:block; font-size:13.5px; color:var(--text-secondary); margin-top:4px; line-height:1.55; max-width:66ch}

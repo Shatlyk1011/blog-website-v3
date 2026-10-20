@@ -1,0 +1,56 @@
+name = { en = "Taiga", ru = "Тайга" }
+weight = 5
+group = { en = "Originals", ru = "Свои" }
+
+# surface / text ramp (swapped per theme)
+# The theme's namesake palette: the cold blue-grey slate of a boreal forest in
+# fog. Hue ~208-210deg, low saturation kept from the degrey pass so it reads as
+# cool grey, not navy. This ramp is tuned for READING COMFORT, not max contrast:
+# the author reads long guides here for minutes, and near-white-on-near-black
+# glares (halation). Note body text sits on bg-deep, not bg-base — body{} paints
+# --bg-deep and .wrap is transparent, so bg-deep is the real reading canvas. So
+# the floor is lifted off near-black (bg-deep #1a1c1f) and the body pulled to an
+# off-white (#c6cfd6): body:canvas drops from a harsh ~13:1 to a restful ~10.8:1,
+# in the Nord / Tokyo Night band. bg-deep stays the deepest token and dark enough
+# to be the CTA button's *text* colour (bg-deep->accent 7.8:1, floor 4.5). The
+# surfaces lift in step so elevation still reads; text-secondary/-muted are lifted
+# too so they stay present on the raised card faces, not washed. Hue held, low
+# saturation kept — no re-saturation. See local/design/palette-comfort.html.
+"bg-deep" = "#1a1c1f"
+"bg-base" = "#202326"
+"bg-surface" = "#282d32"
+"bg-raised" = "#343b41"
+"bg-hover" = "#2d3339"
+"border" = "#3b434b"
+"text-primary" = "#ced6dd"
+"text-secondary" = "#b3bec9"
+"text-muted" = "#8796a2"
+"text-ghost" = "#4d5a67"
+"text-strong" = "#eef3f8"
+"gtok-str" = "#cbb279"
+
+# Ambient body wash. The CSS default (01-base.css) is a WARM amber radial, which
+# is right for Amber/Lamp and wrong here; overridden with the banner's mist
+# (#747f8a) so the page is lit by fog rather than by a lamp.
+"body-glow" = "radial-gradient(1200px 600px at 80% -10%, rgba(116,127,138,.06), transparent 60%)"
+
+# brand accents (constant across built-in palettes; overridable)
+# Glacier teal — the brand accent. Same hue on every dark palette; the Light
+# palette carries a deeper shade of it (see light.toml) because --accent is also
+# the CTA *background* under --bg-deep text, and that flips direction on light.
+"accent" = "#55c0b7"
+"accent-dim" = "rgba(85,192,183,.18)"
+"accent-glow" = "rgba(85,192,183,.28)"
+"accent-green" = "#a8c954"
+"accent-green-dim" = "rgba(168,201,84,.16)"
+"accent-green-glow" = "rgba(168,201,84,.22)"
+"accent-copper" = "#c87a42"
+"accent-copper-dim" = "rgba(200,122,66,.18)"
+"accent-blue" = "#6ba4c9"
+"accent-blue-dim" = "rgba(107,164,201,.16)"
+"accent-gold" = "#d4a24e"
+"accent-gold-dim" = "rgba(212,162,78,.18)"
+"accent-red" = "#d2695a"
+"accent-red-dim" = "rgba(210,105,90,.16)"
+"accent-violet" = "#a48bd4"
+"accent-violet-dim" = "rgba(164,139,212,.16)"

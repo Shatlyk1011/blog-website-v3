@@ -1,0 +1,173 @@
+{{- /* Single-page template. Guides that live in a guide section (kind=page whose
+       section is a rubric or an extra guide section — see guide-sections.html)
+       get the full article machinery — two rails, kicker, meta, TOC, series
+       bridge. Every other page (about/roadmap/lab) gets the plain column.
+
+       The h1 splits its title at the first ": " into a heading and a .sub subtitle
+       (as every mock article does); an explicit `sub:` overrides the auto-split, and
+       a title without a colon stays single-line. */ -}}
+{{ define "main" }}
+{{- $isArticle := and (eq .Kind "page") (in (partialCached "guide-sections.html" .) .Section) -}}
+{{- $main := .Title -}}
+{{- $auto := "" -}}
+{{- $parts := split .Title ": " -}}
+{{- if gt (len $parts) 1 -}}
+  {{- $main = printf "%s:" (index $parts 0) -}}
+  {{- $auto = strings.TrimPrefix (printf "%s: " (index $parts 0)) .Title -}}
+{{- end -}}
+{{- $sub := .Params.sub | default $auto -}}
+{{- if $isArticle -}}
+<div class="layout">
+  {{ partial "article/rail-left.html" . }}
+  <main class="wrap">
+{{ partial "article/kicker.html" . }}
+{{- /* The search index gets the title as a VALUE, not as the h1's text. The
+       h1 splits on ": " into two lines, and the minifier drops the whitespace
+       around the <br> that separates them, so the extracted text read
+       "Цена одновременности:треды" — one word that matches nothing a reader
+       would type. Pagefind's `key:value` form sidesteps the markup entirely. */ -}}
+<h1 data-pagefind-meta="title:{{ .Title }}">{{ $main }}{{ with $sub }}<br><span class="sub">{{ . }}</span>{{ end }}</h1>
+{{ partial "article/meta.html" . }}
+{{- /* Cover (params.article.cover): the picture the page names as `cover`, shown
+       WHOLE — the feed crops the same file into a band, an article does not. It
+       is decoration above the prose, hence empty alt; eager with its dimensions
+       stated, since it is the page's largest paint and must not shift the text
+       under it. */ -}}
+{{- if (site.Params.article | default dict).cover }}{{ with partial "page-cover.html" . }}
+<div class="a-cover"><img src="{{ .url }}" alt=""{{ with .w }} width="{{ . }}"{{ end }}{{ with .h }} height="{{ . }}"{{ end }} decoding="async"></div>
+{{ end }}{{ end }}
+{{- /* Standfirst: prose before the <!--more--> divider is the lead (.Summary),
+       everything after is the body (.ContentWithoutSummary). Gated on the divider
+       being present in the raw markdown, NOT on .Truncated — .Truncated is also
+       true for Hugo's auto-summary, which would wrongly split an intro off any
+       long article that never had a lead. Falls back to the legacy `lead:` param
+       when there's no divider, so articles migrate one file at a time. */ -}}
+{{- /* `lead_deck: true` opts back into the display deck an article's standfirst
+       otherwise gives up (bigger, quieter, set apart from the prose) — for an
+       opening that introduces the piece rather than starting it. */ -}}
+{{- $cut := strings.Contains .RawContent "<!--more-->" -}}
+{{- $leadCls := printf "lead%s" (cond (not .Params.lead_deck) "" " deck") -}}
+{{ if $cut }}<div class="{{ $leadCls }}">{{ .Summary }}</div>
+{{ else }}{{ with .Params.lead }}<p class="{{ $leadCls }}">{{ $.RenderString (dict "display" "inline") . }}</p>{{ end }}{{ end }}
+{{ with .Params.intro }}{{ $.RenderString (dict "display" "block") . }}{{ end }}
+{{- /* The body is rendered HERE, above the TOC that lists it: render-heading.html
+       files each `{short="…"}` into the page store as the prose goes through, and
+       the TOC below reads them by anchor. Hugo renders a page's content once and
+       hands out the same result afterwards, so naming it early costs nothing —
+       the markup is still printed where it belongs, further down. */ -}}
+{{- $_ := .Content -}}
+{{ partial "article/toc.html" . }}
+{{- /* Pagefind: index the prose only. A placeholder has nothing to find, so it
+       stays out of the index (keeps search results to real guides), and so does
+       a guide that asks to be left out with `search: false` — for a piece that
+       is published but not something anyone should be sent to cold. crumb/mins
+       ride along as result-card metadata (empty spans carry inline key:value). */ -}}
+{{ if or .Params.placeholder (eq .Params.search false) }}{{ .Content }}{{ else }}
+<div data-pagefind-body>
+<span data-pagefind-meta="crumb:{{ partial "article/crumb.html" . }}"></span>
+<span data-pagefind-meta="mins:{{ .Params.mins | default (partial "article/reading-time.html" .) }}"></span>
+{{ if $cut }}{{ .ContentWithoutSummary }}{{ else }}{{ .Content }}{{ end }}
+</div>
+{{ end }}
+{{- /* Definition cards for {{< term >}}. AFTER .Content — the shortcode fills
+       the store as the content renders. Outside data-pagefind-body on purpose:
+       a definition is an aside, and indexing it would sit the same sentence in
+       two search results. */ -}}
+{{ partial "article/term-cards.html" . }}
+{{ partial "article/link-cards.html" . }}
+{{ partial "article/series-bridge.html" . }}
+{{- /* Newsletter, automatic end-of-article block (params.newsletter.placements
+       .articleEnd, off by default). Below the series bridge on purpose: where
+       the article goes next is the reader's first question, and the offer to
+       hear about the next one only makes sense once they have seen it. Skipped
+       when the page wrote its own {{< newsletter-cta >}}. */}}
+{{ partial "newsletter/article-end.html" . }}
+{{ with .Params.foot }}<div class="foot">{{ $.RenderString (dict "display" "block") . }}</div>{{ end }}
+{{- /* Comments, last of all (params.comments.enable; `comments: false` in front
+       matter opts a single guide out). Below the author's own closing note on
+       purpose: everything above is the article finishing itself, and this is
+       the one block that can grow to several screens. Nothing of the engine
+       loads until the reader presses the button — see modules/comments.js. */}}
+{{ partial "comments/block.html" . }}
+  </main>
+  {{ partial "article/rail-right.html" . }}
+</div>
+{{- else -}}
+{{- /* Mascot slot for a standalone page: a site may ship _partials/page/mascot.html
+       (inline SVG artwork) and a page opts in with `mascot:` in front matter,
+       whose value reaches the partial as its context — so one drawing can serve
+       several pages, or several drawings one lookup. Same site-side pattern as
+       home/mascot.html and home/logos/<section>.html: the theme stays
+       subject-agnostic and owns no artwork.
+
+       BOTH conditions are checked. Without the templates.Exists guard a page
+       naming a mascot on a site that ships no partial fails the build, and the
+       .has-mascot hook — a site's handle for making .wrap a positioning context
+       — would be stamped for a mascot that never renders. No partial, or no
+       front-matter opt-in ⇒ no slot, and about/roadmap/lab stay plain. */ -}}
+{{- $mascot := and .Params.mascot (templates.Exists "_partials/page/mascot.html") -}}
+{{- /* `toc: true` gives a plain page the article's RIGHT RAIL — the same
+       partial an article gets, filled by the same toc.js from the same h2/h3
+       and honouring the same `toc_labels`. Deliberately the rail alone and not
+       the inline block: on a plain page the block would sit between the lead
+       and the first line of text, i.e. across the reader's path, to list
+       sections they can already see. The rail stands beside the prose instead
+       and costs the page nothing.
+
+       A long page that is READ THROUGH (about, a roadmap) does not need it; a
+       page people arrive at with one question and leave with one answer does.
+       Off by default, because contents above a three-paragraph page is
+       furniture.
+
+       The grid is the article's: three columns, the prose in the middle. With
+       no left rail the first column simply stays empty and the column stays
+       centred — nothing here assumes a pair. */ -}}
+{{- $toc := .Params.toc -}}
+{{- if $toc }}<div class="layout">{{ end }}
+<main class="wrap{{ if $mascot }} has-mascot{{ end }}">
+  {{ if $mascot }}{{ partial "page/mascot.html" .Params.mascot }}{{ end }}
+  {{ with .Params.kicker }}<div class="kicker"><span class="dot"></span>{{ . }}</div>{{ end }}
+  <h1 data-pagefind-meta="title:{{ .Title }}">{{ .Params.headline | default $main }}{{ with $sub }}<br><span class="sub">{{ . }}</span>{{ end }}</h1>
+  {{- /* The standfirst, on the same terms an article gets it: prose before the
+         <!--more--> divider is the lead, everything after is the body; a page
+         with no divider falls back to the `lead:` param. `lead_deck: true`
+         opts into the display deck — bigger, quieter, set apart from the prose
+         — for an opening that introduces the page rather than starting it.
+
+         Gated on the divider being present in the raw markdown, NOT on
+         .Truncated: that is also true for Hugo's auto-summary, which would
+         wrongly split an intro off any long page that never had one. */ -}}
+  {{- $cut := strings.Contains .RawContent "<!--more-->" -}}
+  {{- $leadCls := printf "lead%s" (cond (not .Params.lead_deck) "" " deck") -}}
+  {{ if $cut }}<div class="{{ $leadCls }}">{{ .Summary }}</div>
+  {{ else }}{{ with .Params.lead }}<p class="{{ $leadCls }}">{{ $.RenderString (dict "display" "inline") . }}</p>{{ end }}{{ end }}
+  {{- /* Pagefind: a plain page stays OUT of the index unless it asks in with
+         `search: true` in its front matter. The modal is announced as a search
+         of the guides, and on a site of a dozen guides the about/support/legal
+         pages are otherwise a large share of everything indexed — and the legal
+         ones are the worst of it, being long texts built out of exactly the
+         common words a reader types ("data", "code", "comments"). They are one
+         click away in the header and the footer; a guide pushed off the first
+         screen by them is not.
+
+         The opt-in is per page rather than site-wide because the page that
+         earns a place in search is a judgement about that page — a FAQ, a
+         handbook entry — and there is no honest default for someone else's
+         site. A whole SECTION of such pages belongs in
+         params.extraGuideSections instead, which makes its pages guides
+         outright. */ -}}
+  {{ if eq .Params.search true }}
+  <div data-pagefind-body>
+  {{ with .Params.kicker }}<span data-pagefind-meta="crumb:{{ . }}"></span>{{ end }}
+  {{ if $cut }}{{ .ContentWithoutSummary }}{{ else }}{{ .Content }}{{ end }}
+  </div>
+  {{ else }}
+  {{ if $cut }}{{ .ContentWithoutSummary }}{{ else }}{{ .Content }}{{ end }}
+  {{ end }}
+  {{ partial "article/term-cards.html" . }}
+  {{ partial "article/link-cards.html" . }}
+  {{ with .Params.foot }}<div class="foot">{{ $.RenderString (dict "display" "block") . }}</div>{{ end }}
+</main>
+{{- if $toc }}{{ partial "article/rail-right.html" . }}</div>{{ end }}
+{{- end -}}
+{{ end }}

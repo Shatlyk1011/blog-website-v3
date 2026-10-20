@@ -1,0 +1,50 @@
+{{- /* Rubric showcase on the home page. Cards are generated per site section
+       (site.Params.rubricSections, in listed order) — not a hard-coded three —
+       so a site with more or fewer rubrics just works. The section logo is a
+       partial looked up by name: home/logos/<section>.html on the SITE side
+       (the mock's three SVGs live there, keeping the theme subject-agnostic),
+       falling back to the theme's neutral home/logos/default.html.
+
+       .r-n counts the section's whole library (series parts included) so it
+       matches what the rubric page lists; when the section carries series it
+       reads "N guides · M series", otherwise "N deep dives".
+
+       params.home.rubricCards: "naked" drops the card box (fill + border) and
+       grows the logo — free columns on the page, the vdoing mechanic, and the
+       theme's default, because a boxed tile sits on the hero backdrop as an
+       opaque slab. "boxed" is the framed card, for a home with no backdrop
+       behind it. */ -}}
+{{- $cards := (site.Params.home | default dict).rubricCards | default "boxed" -}}
+<section class="rubs2{{ if eq $cards "naked" }} rubs2-naked{{ end }}" aria-label="{{ i18n "nav_rubrics" }}">
+{{- range site.Params.rubricSections }}
+  {{- $sec := site.GetPage (printf "/%s" .) -}}
+  {{- if $sec }}
+    {{- $id := $sec.Section -}}
+    {{- $pages := where site.RegularPages "Section" $id -}}
+    {{- $nGuides := len $pages -}}
+    {{- /* Series are the rubric's sub-sections minus standalone containers;
+         announced-but-empty series count too — they are already visible as
+         teasers on the rubric page. */ -}}
+    {{- $nSeries := 0 -}}
+    {{- range $sec.Sections }}{{ if not .Params.standalone }}{{ $nSeries = add $nSeries 1 }}{{ end }}{{ end -}}
+    {{- $logo := printf "home/logos/%s.html" $id -}}
+    {{- $logoPartial := cond (templates.Exists (printf "_partials/%s" $logo)) $logo "home/logos/default.html" -}}
+  {{/* .r-txt groups the three text lines so a phone can lay the card out as a
+       ROW — glyph beside the words — without the glyph having to span an
+       unknown number of grid rows (a rubric may or may not carry card_line).
+       On every wider screen the wrapper is `display:contents`, so the desktop
+       column is byte-for-byte the previous one. */}}
+  <a class="rub2" href="{{ $sec.RelPermalink }}">
+    <span class="r-logo" data-logo="{{ $id }}">{{ partial $logoPartial $sec }}</span>
+    <span class="r-txt">
+      <span class="r-t">{{ $sec.Title }}</span>
+      {{ with $sec.Params.card_line }}<span class="r-d">{{ . }}</span>{{ end }}
+      {{/* Count line only when the rubric has guides (with series → "N guides · M
+           series", else "N deep dives"); an empty rubric shows a muted "in the
+           works" rather than a meaningless "0 deep dives". */}}
+      {{ if gt $nGuides 0 }}<span class="r-n">{{ if gt $nSeries 0 }}{{ i18n "guides_count" $nGuides }} · {{ i18n "series_count" $nSeries }}{{ else }}{{ i18n "reviews_count" $nGuides }}{{ end }}</span>{{ else }}<span class="r-n r-n-empty">{{ i18n "rubric_empty" }}</span>{{ end }}
+    </span>
+  </a>
+  {{- end }}
+{{- end }}
+</section>

@@ -1,0 +1,193 @@
+/* while a theme swap applies, kill transitions for one frame */
+:root.theme-switching *{transition:none !important}
+
+/* ---- header (static by default: scrolls away with the page) ---- */
+.site-head{border-bottom:1px solid var(--border)}
+/* --head-pad is the row's side gutter as a variable because the narrow-screen
+   menu panel is positioned against .head-in and has to sit on exactly the same
+   two edges; changing the padding in one place must move both. */
+/* Two spacings, not one. --head-gap is what stands between the controls on the
+   right (34px squares and the search button): at the row's old 18px they read as
+   four separate objects rather than one cluster, and the row looked sparse.
+   --head-block-gap is the distance between the row's big parts — brand, nav,
+   tool cluster — and stays where it was so the header does not shift.
+   Only the brand needs the difference added back: every other "block" boundary
+   falls on .head-sp, which is flex:1 and swallows any gap around it. */
+.head-in{--head-pad:24px; --head-gap:10px; --head-block-gap:18px; max-width:var(--shell); margin:0 auto; padding:12px var(--head-pad); display:flex; align-items:center; column-gap:var(--head-gap)}
+/* NB: no flex gap here — the wordmark is a bare text node + .tld span, a gap
+   would split the brand name and its .tld apart; the svg carries the spacing */
+.brand{margin-right:calc(var(--head-block-gap) - var(--head-gap)); display:inline-flex; align-items:center; font-family:var(--font-mono); font-size:14.5px; font-weight:600; letter-spacing:.02em; color:var(--text-primary); border:0}
+.brand:hover{border:0; color:var(--accent)}
+.brand svg{width:22px; height:22px; display:block; border-radius:6px; margin-right:10px}
+.brand .tld{color:var(--accent)}
+/* variant key: quiet badge so mock variants are distinguishable at a glance */
+.nav{display:flex; align-items:center; gap:2px; overflow-x:auto; scrollbar-width:none}
+.nav::-webkit-scrollbar{display:none}
+.nav a{font-size:13.5px; color:var(--text-secondary); padding:6px 11px; border:0; border-radius:8px; white-space:nowrap; transition:color var(--dur) var(--ease), background var(--dur) var(--ease)}
+.nav a:hover{color:var(--text-primary); background:var(--bg-surface)}
+.nav a.on{color:var(--accent)}
+sup.beta{font-family:var(--font-mono); font-size:9px; color:var(--accent); margin-left:3px; letter-spacing:.04em; opacity:.85}
+.head-sp{flex:1}
+/* language switcher: mono text, sized like the search button's label so the two
+   controls read as one cluster. flex:none — the nav (overflow-x:auto) is what
+   gives way on a narrow screen, never the two-or-three characters here */
+.lang-sw{display:inline-flex; align-items:center; gap:6px; flex:none; font-family:var(--font-mono); font-size:11.5px; letter-spacing:.04em; white-space:nowrap}
+.lang-sw a{color:var(--text-muted); border:0; padding:2px 1px; transition:color var(--dur) var(--ease)}
+.lang-sw a:hover{color:var(--text-secondary); border:0}
+.lang-sw a.on{color:var(--accent)}
+.lang-sep{color:var(--text-muted); opacity:.45}
+/* A modifier symbol on a key cap — ⌘ ⌥ ⇧ ⌃ — comes out visibly smaller than the
+   letters beside it, and not as a matter of taste. None of them is inside the
+   mono subsets this theme ships (head/fonts.html stops the latin range at
+   U+206F), so the browser never reaches JetBrains Mono for them; JetBrains Mono
+   and SF Mono do not carry them at all, and the first font in --font-mono that
+   does is Menlo, where ⌘ is drawn at 0.73 of cap height. Next to "Enter" at the
+   10px a cap uses, that reads as a smudge.
+
+   The correction is declared as a face rather than applied to a wrapper, so it
+   needs no markup and cannot be forgotten: unicode-range hands these code
+   points — and only these — to Menlo, size-adjust lifts them to ~0.88 of cap
+   height (matching, without the mass an equal-height ⌘ would carry), and every
+   <kbd class="kb"> on the site gets it for free. Where Menlo is absent the face
+   simply never loads and the stack falls through exactly as it did before. */
+@font-face{
+  font-family:'KeyCap';
+  /* PostScript / full name, not the family: local() matches those two and
+     silently finds nothing for a bare "Menlo" — the face then never loads and
+     the whole correction disappears without an error anywhere. */
+  src:local('Menlo-Regular'), local('Menlo Regular');
+  unicode-range:U+2318, U+2325, U+21E7, U+2303, U+21B5, U+21E5, U+232B, U+238B;
+  size-adjust:120%;
+}
+kbd.kb{font-family:'KeyCap', var(--font-mono); font-size:10px; color:var(--text-muted); border:1px solid var(--border); border-bottom-width:2px; border-radius:5px; padding:1px 5px; background:var(--bg-base)}
+/* source link: a square icon button matching the popover control (.tp-btn) so the
+   header's right-hand controls read as one set. Neutral until hover, then accent. */
+.gh-link{width:34px; height:34px; flex:none; display:inline-flex; align-items:center; justify-content:center; border:1px solid var(--border); border-radius:9px; background:var(--bg-surface); color:var(--text-secondary); transition:color var(--dur) var(--ease), border-color var(--dur) var(--ease), background var(--dur) var(--ease)}
+.gh-link:hover{color:var(--accent); border-color:var(--accent-dim); background:var(--bg-raised)}
+.gh-link:focus-visible{outline:2px solid var(--accent); outline-offset:2px}
+.gh-link svg{width:18px; height:18px}
+/* RSS feed icon link — right of the palette switcher. Same icon-button chrome as
+   .gh-link / .tp-btn (34px square, 9px radius, neutral until hover→accent) so the
+   right-hand control cluster stays one visual set across every palette. */
+.rss-link{width:34px; height:34px; flex:none; display:inline-flex; align-items:center; justify-content:center; border:1px solid var(--border); border-radius:9px; background:var(--bg-surface); color:var(--text-secondary); transition:color var(--dur) var(--ease), border-color var(--dur) var(--ease), background var(--dur) var(--ease)}
+.rss-link:hover{color:var(--accent); border-color:var(--accent-dim); background:var(--bg-raised)}
+.rss-link:focus-visible{outline:2px solid var(--accent); outline-offset:2px}
+.rss-link svg{width:16px; height:16px}
+/* command-trigger button: magnifier · label · ⌘K keycap, on a fixed 32px row so
+   the three optically center; asymmetric padding (11 left / 8 right) balances the
+   bare icon against the boxed keycap */
+/* flex:none for the same reason .lang-sw has it: the button is a fixed control,
+   not slack. Without it a cramped row squeezed it down to a sliver of its icon
+   instead of letting the nav give way. */
+.search-btn{display:inline-flex; flex:none; align-items:center; gap:7px; height:32px; padding:0 8px 0 11px; font-family:var(--font-mono); font-size:12.5px; line-height:1; color:var(--text-muted); background:var(--bg-surface); border:1px solid var(--border); border-radius:var(--radius-sm); cursor:pointer; transition:color var(--dur) var(--ease), border-color var(--dur) var(--ease), background var(--dur) var(--ease)}
+.search-btn svg{flex:0 0 auto; width:14px; height:14px; transition:color var(--dur) var(--ease)}
+.search-btn:hover{color:var(--text-secondary); border-color:var(--accent-dim); background:var(--bg-raised)}
+.search-btn:hover svg{color:var(--accent)}
+.search-btn:hover .kb{color:var(--text-secondary); border-color:var(--text-muted)}
+.search-btn:active{transform:translateY(1px)}
+.search-btn:focus-visible{outline:2px solid var(--accent); outline-offset:2px}
+/* refined in-button keycap: flex-centered content + a 1px bottom shadow-lip (not a
+   heavier bottom border) so the ⌘K sits dead-centre against the label */
+.search-btn .kb{display:inline-flex; align-items:center; justify-content:center; margin-left:3px; height:16px; padding:0 5px; font-size:10.5px; border-bottom-width:1px; box-shadow:0 1px 0 var(--border); transition:color var(--dur) var(--ease), border-color var(--dur) var(--ease)}
+/* narrow: the search button drops to its icon, and the row tightens to buy back
+   the width the language switcher takes (by here the rubric links have already
+   moved into the disclosure menu at the foot of this file) */
+/* Narrow: the search button collapses to a square, so the right-hand side is
+   four identical squares — they can sit tighter still. The block spacing comes
+   down with it, or the brand would be the only wide gap left in the row. */
+@media(max-width:720px){.search-btn{width:36px; padding:0; gap:0; justify-content:center} .search-btn .s-lab, .search-btn .kb{display:none} .search-btn svg{width:16px; height:16px} .head-in{--head-gap:8px; --head-block-gap:16px}}
+@media(prefers-reduced-motion:reduce){.search-btn{transition:none} .search-btn:active{transform:none}}
+/* header sticks, hides on scroll-down, slides back on scroll-up */
+.site-head{position:sticky; top:0; z-index:110; transition:transform .24s var(--ease)}
+/* The frost lives on a pseudo-element, not on .site-head itself: backdrop-filter
+   turns its box into a backdrop root, and everything inside — the palette
+   popover — then filters an empty backdrop, i.e. shows the page through its own
+   transparency unblurred. Behind the content it also keeps Firefox from
+   rasterizing the header buttons together with the blur. */
+.site-head::before{content:''; position:absolute; inset:0; z-index:-1;
+  background:color-mix(in srgb, var(--bg-deep) 88%, transparent);
+  -webkit-backdrop-filter:blur(10px); backdrop-filter:blur(10px)}
+html.head-hidden .site-head{transform:translateY(-100%)}
+
+/* ---- narrow screens: the rubric nav folds into a disclosure menu ------------
+   Full width, the row wants ~845px (~900 on an article, where the focus toggle
+   joins the cluster) — the Russian rubric labels alone measure ~430. Below that
+   the nav's overflow-x:auto did keep the row from breaking, but the price was a
+   label sheared mid-word against the buttons, which reads as broken layout
+   rather than as a scroller nobody thinks to swipe. So under 900px the links
+   move into a panel and the nav is represented by a burger standing where it
+   used to start. 900 rather than a rounder 768 because that is where the row
+   actually stops fitting; a tablet in portrait gets the menu, and every laptop
+   keeps the full row.
+   Above the breakpoint every piece of that machinery is inert: .nav-wrap and
+   .nav-pop are display:contents, so .nav is still a direct flex child of
+   .head-in and the desktop row is unchanged down to the pixel. */
+.nav-wrap, .nav-pop{display:contents}
+.nav-btn, .nav-extra{display:none}
+/* labelled rows for the controls that leave the row at phone width — quieter
+   than the rubric links above them, since they are the menu's second tier */
+.nav-x{display:flex; align-items:center; gap:9px; padding:8px 10px; border:0; border-radius:8px; font-size:13px; color:var(--text-muted); transition:color var(--dur) var(--ease), background var(--dur) var(--ease)}
+.nav-x:hover{border:0; color:var(--text-primary); background:var(--bg-surface)}
+.nav-x:focus-visible{outline:2px solid var(--accent); outline-offset:-2px}
+.nav-x svg{flex:none; width:14px; height:14px; opacity:.8}
+@media(max-width:900px){
+  /* The panel hangs off .head-in, not off .nav-wrap: anchored to a 34px button
+     its right edge would run past a 360px viewport and hand the page a
+     horizontal scrollbar. Sharing the row's own --head-pad puts it on the same
+     two edges as the brand and the page content below. */
+  .head-in{position:relative}
+  .nav-wrap{display:flex; flex:none; align-items:center}
+  /* same chrome as .tp-btn / .gh-link — on a phone this button and the control
+     cluster opposite it are all the reader sees, and they should read as one set */
+  .nav-btn{width:34px; height:34px; flex:none; display:inline-flex; align-items:center; justify-content:center; padding:0; border:1px solid var(--border); border-radius:9px; background:var(--bg-surface); color:var(--text-secondary); cursor:pointer; transition:color var(--dur) var(--ease), border-color var(--dur) var(--ease), background var(--dur) var(--ease)}
+  .nav-btn:hover{color:var(--accent); border-color:var(--accent-dim); background:var(--bg-raised)}
+  .nav-btn[aria-expanded="true"]{color:var(--accent); border-color:var(--accent)}
+  .nav-btn:focus-visible{outline:2px solid var(--accent); outline-offset:2px}
+  .nav-btn svg{width:19px; height:19px}
+  /* view-box, not fill-box: a horizontal <line> has a zero-height bounding box,
+     so its own box is a shaky origin — rotate about the viewBox centre instead,
+     which is exactly where the three strokes have to meet. */
+  .nav-btn svg line{transform-box:view-box; transform-origin:12px 12px; transition:transform .2s var(--ease), opacity .12s var(--ease)}
+  .nav-wrap.open .nav-btn .nb-t{transform:translateY(5px) rotate(45deg)}
+  .nav-wrap.open .nav-btn .nb-b{transform:translateY(-5px) rotate(-45deg)}
+  .nav-wrap.open .nav-btn .nb-m{opacity:0; transform:scaleX(.4)}
+  /* Same frosted card as the palette popover — the two drop out of the same row
+     and would look like two different products otherwise. */
+  .nav-pop{
+    display:block; position:absolute; z-index:150;
+    top:calc(100% + 6px); left:var(--head-pad); right:var(--head-pad); max-width:320px; padding:7px;
+    background:color-mix(in srgb, var(--bg-surface) 93%, transparent);
+    -webkit-backdrop-filter:blur(14px) saturate(1.3); backdrop-filter:blur(14px) saturate(1.3);
+    border:1px solid var(--border); border-radius:var(--radius);
+    box-shadow:0 18px 44px -14px rgba(0,0,0,.6), 0 0 0 1px var(--accent-dim);
+    /* a site is free to ship more rubrics than fit a phone in landscape */
+    max-height:calc(100vh - 80px); overflow-y:auto; overscroll-behavior:contain;
+    /* visibility, not display: it keeps the panel out of the tab order and out
+       of the a11y tree while still leaving something to fade. Its own switch is
+       delayed by the fade on the way out and instant on the way in. */
+    opacity:0; visibility:hidden; transform:translateY(-6px);
+    transition:opacity .16s var(--ease), transform .18s var(--ease), visibility 0s linear .18s;
+  }
+  .nav-wrap.open .nav-pop{opacity:1; visibility:visible; transform:none;
+    transition:opacity .16s var(--ease), transform .18s var(--ease), visibility 0s}
+  .nav-pop .nav{display:flex; flex-direction:column; align-items:stretch; gap:1px; overflow:visible}
+  .nav-pop .nav a{padding:9px 10px; font-size:14.5px; white-space:normal}
+  .nav-pop .nav a.on{background:var(--accent-dim)}
+}
+@media(max-width:560px){
+  /* Phone: the source icon hands its place to a labelled row in the menu — of
+     the right-hand set it is the one a reader reaches for least, and the one
+     whose icon says least on its own, so a labelled row is a straight upgrade.
+     The feed icon stays in the row (right of the palette, as on desktop): it
+     is what a reader of a guides site actually subscribes with, and the room
+     for it comes from the focus toggle, which a phone drops entirely — see
+     12-article-layout.css. Gated on .has-nav: with no menu to move it into,
+     the source icon stays in the row too. */
+  .head-in.has-nav>.gh-link{display:none}
+  .nav-extra{display:flex; flex-direction:column; gap:1px; margin-top:5px; padding-top:5px; border-top:1px solid var(--border)}
+}
+/* .nav-wrap.open .nav-pop has to be named as well as .nav-pop: it carries its own
+   transition at a higher specificity, so dropping the closed state alone would
+   still animate the panel open. With both gone the visibility switch is instant,
+   which is what a reader who asked for less motion wants anyway. */
+@media(prefers-reduced-motion:reduce){.nav-pop, .nav-wrap.open .nav-pop, .nav-btn svg line{transition:none}}

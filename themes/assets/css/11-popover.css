@@ -1,0 +1,73 @@
+/* ---- theme popover (lives in the header now, not floating) ---- */
+.tp-wrap{position:relative}
+.tp-btn{
+  width:34px; height:34px; display:flex; align-items:center; justify-content:center; padding:0;
+  border:1px solid var(--border); border-radius:9px;
+  background:var(--bg-surface); color:var(--text-secondary); cursor:pointer;
+  transition:color var(--dur) var(--ease), border-color var(--dur) var(--ease), background var(--dur) var(--ease);
+}
+.tp-btn:hover{color:var(--accent); border-color:var(--accent-dim)}
+.tp-btn[aria-expanded="true"]{color:var(--accent); border-color:var(--accent)}
+.tp-btn:focus-visible{outline:2px solid var(--accent); outline-offset:2px}
+.tp-btn svg{width:17px; height:17px}
+.tp-pop{
+  position:absolute; top:44px; right:0; z-index:150; width:232px;
+  background:color-mix(in srgb, var(--bg-surface) 93%, transparent);
+  -webkit-backdrop-filter:blur(14px) saturate(1.3); backdrop-filter:blur(14px) saturate(1.3);
+  border:1px solid var(--border); border-radius:var(--radius);
+  box-shadow:0 18px 44px -14px rgba(0,0,0,.6), 0 0 0 1px var(--accent-dim);
+  padding:7px; animation:tp-in .15s var(--ease) both;
+  /* the list grows with the palette count — a site shipping its own palettes
+     must not push rows off a short screen */
+  max-height:calc(100vh - 80px); overflow-y:auto; overscroll-behavior:contain;
+}
+@keyframes tp-in{from{opacity:0; transform:translateY(-6px)} to{opacity:1; transform:none}}
+.tp-head{font-family:var(--font-mono); font-size:10px; letter-spacing:.14em; text-transform:uppercase; color:var(--text-muted); padding:5px 8px 8px}
+.tp-list{display:flex; flex-direction:column; gap:1px}
+.tp-grp{display:flex; flex-direction:column; gap:1px}
+.tp-glab{
+  font-family:var(--font-mono); font-size:9px; letter-spacing:.14em; text-transform:uppercase;
+  color:var(--text-ghost); padding:10px 8px 4px;
+}
+.tp-grp:first-child .tp-glab{padding-top:2px}
+.tp-item{
+  display:flex; align-items:center; gap:11px; width:100%; padding:7px 8px;
+  border:0; border-radius:8px; background:none; cursor:pointer; text-align:left;
+  font-family:var(--font-sans); color:var(--text-secondary);
+  transition:background var(--dur) var(--ease), color var(--dur) var(--ease);
+}
+.tp-item:hover{background:color-mix(in srgb, var(--text-primary) 7%, transparent); color:var(--text-primary)}
+.tp-item.current{background:var(--accent-dim); color:var(--text-primary)}
+.tp-item:focus-visible{outline:2px solid var(--accent); outline-offset:-2px}
+/* Swatch = the palette as a miniature page: canvas (--sw-bg), a card on it
+   (--sw-card), a heading and a line of body over the card. Flat areas, not
+   dots — the difference between palettes is a hue cast a 5px circle cannot
+   show. No accent: params.accent paints it the same in every palette.
+
+   Every dark palette's canvas sits within a few points of #141414, so the
+   temperature is carried almost entirely by the text tones — which is why they
+   get the area here, and why the frame is tinted with the palette's own text
+   instead of the current one's: a warm palette then reads warm around its whole
+   perimeter, not along two 2px lines.
+
+   The swatch is deliberately not colour-accurate. The six closest canvas pairs
+   sit 0.006-0.014 apart in OKLab, which a 32x24 chip cannot show — least of all
+   on a light palette's white popover, where every dark swatch collapses into
+   the same rectangle. Saturating the chip amplifies the hue each palette really
+   has, in proportion; the achromatic ones stay neutral. A legend, not a
+   preview: its job is telling twelve rows apart at a glance. */
+.tp-sw{
+  position:relative; width:32px; height:24px; flex-shrink:0; overflow:hidden;
+  border-radius:5px; background:var(--sw-bg);
+  border:1px solid color-mix(in srgb, var(--sw-tx) 28%, transparent);
+  filter:saturate(3);
+}
+.tp-sw::after{content:''; position:absolute; inset:7px 3px -1px; border-radius:3px 3px 0 0; background:var(--sw-card)}
+.tp-sw i{position:absolute; border-radius:1px; z-index:1}
+.tp-sw-h{top:2px; left:3px; width:11px; height:2px; background:var(--sw-mu)}
+.tp-sw-t{top:11px; left:6px; width:20px; height:3px; background:var(--sw-tx)}
+.tp-sw-s{top:17px; left:6px; width:13px; height:2px; background:var(--sw-mu)}
+.tp-name{flex:1; font-size:13px; font-weight:600}
+.tp-check{color:var(--accent); font-family:var(--font-mono); font-weight:700; flex-shrink:0; opacity:0}
+.tp-item.current .tp-check{opacity:1}
+@media (prefers-reduced-motion:reduce){ .tp-pop{animation:none} }

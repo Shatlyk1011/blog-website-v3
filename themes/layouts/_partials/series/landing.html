@@ -1,0 +1,50 @@
+{{- /* Series landing — the page of one series (a rubric's sub-section). Header
+       kicker names the rubric; the h1 is the series title with its tagline as
+       the .sub line; the description is the lead; the page's own markdown (an
+       epigraph, a reading order note) renders after it. The parts list reuses
+       the rubric block's markup (.series/.slist — 15-rubric.css styles both),
+       topped with the same meta line and closed by a "start here" CTA to part 1.
+       A series with no listed parts yet renders as an announcement teaser
+       instead of an empty list. Context = the series section page. */ -}}
+{{- $rubric := .Parent -}}
+{{- $pages := partialCached "series/parts.html" . .RelPermalink -}}
+{{- $mins := 0 -}}{{ range $pages }}{{ if not .announce }}{{ $mins = add $mins .mins }}{{ end }}{{ end -}}
+{{- $start := "" -}}{{ range $pages }}{{ if and (eq $start "") .url }}{{ $start = .url }}{{ end }}{{ end -}}
+<main class="wrap">
+  <div class="kicker"><span class="dot"></span><a href="{{ $rubric.RelPermalink }}">{{ $rubric.Params.label | default (lower $rubric.Title) }}</a> · {{ i18n "series_word" }}</div>
+  <h1>{{ .Title }}{{ with .Params.tagline }}<br><span class="sub">{{ . }}</span>{{ end }}</h1>
+  {{- /* The visible paragraph is `lead` when the series has one, and the
+         `description` otherwise. Same split a rubric already uses: `lead` is
+         written for the page and may run as long as the page can carry, while
+         `description` has a second job — it is the meta tag and the share card,
+         where a long line is cut mid-thought. A series with only `description`
+         keeps behaving exactly as before. */ -}}
+  {{ with (.Params.lead | default .Description) }}<p class="lead">{{ . }}</p>{{ end }}
+  {{ .Content }}
+  {{- if $pages }}
+  <section class="series ser-landing">
+    <div class="ser-head">
+      <span class="ser-k">{{ i18n "series_word" }}</span>
+      <span class="ser-m">{{ i18n "parts_count" (len $pages) }} · ~{{ partial "rubric/duration.html" $mins }}</span>
+    </div>
+    <ol class="slist">
+      {{- range $pages }}
+      {{- if .announce }}
+      <li><span class="soon">{{ .linkTitle }}<span class="soon-tag">{{ i18n "part_soon" }}</span></span></li>
+      {{- else }}
+      <li><a href="{{ .url }}">{{ .linkTitle }} <span class="mins">{{ .mins }} {{ i18n "mins_abbr" }}</span></a></li>
+      {{- end }}
+      {{- end }}
+    </ol>
+    {{- with $start }}<a class="ser-start" href="{{ . }}">{{ i18n "series_start" }} →</a>{{ end }}
+  </section>
+  {{- else }}
+  <p class="ser-soon">{{ i18n "series_soon" }}</p>
+  {{- end }}
+  {{- /* Newsletter CTA under the chapter list (placements.seriesLanding, off by
+         default): the one page where half the list is parts that do not exist
+         yet, and "I'll write when the next one is out" answers the question the
+         page just raised. */}}
+  {{ partial "newsletter/series-cta.html" . }}
+  {{ with .Params.foot }}<div class="foot">{{ $.RenderString (dict "display" "block") . }}</div>{{ end }}
+</main>

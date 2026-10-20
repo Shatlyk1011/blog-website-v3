@@ -1,0 +1,45 @@
+/* hero / article head */
+.kicker{display:inline-flex; align-items:center; gap:8px; font-family:var(--font-mono); font-size:12px; letter-spacing:.12em; text-transform:uppercase; color:var(--accent); margin-bottom:18px}
+.kicker .dot{width:7px; height:7px; border-radius:50%; background:var(--accent); box-shadow:0 0 10px var(--accent-glow)}
+h1{font-size:38px; line-height:1.15; font-weight:750; letter-spacing:-.02em; margin:0 0 18px}
+h1 .sub{color:var(--accent)}
+.lead{font-size:19px; line-height:1.6; color:var(--text-secondary); margin:0 0 18px}
+/* A lead is prose, not a caption. Against near-black body copy on white the
+   secondary tone reads as greyed-out, and the lead ends up looking weaker than
+   what it introduces; size already says "lead", so colour need not. Same for
+   the other two intro blocks: .ser-d (15-rubric), .p-lead p (14-home). */
+[data-scheme="light"] .lead{color:var(--text-primary)}
+/* article standfirst: the prose before <!--more--> is the article's opening, not
+   a display deck — it reads as body text, so the wrapper carries no type of its
+   own and the child <p>s take the ordinary prose rules. .layout scopes this to
+   real articles; rubric/taxonomy/404 leads keep the plain deck above. */
+.layout .lead{font-size:inherit; line-height:inherit; color:inherit; margin:0}
+/* …but that zero assumes the WRAPPER shape: a <div class="lead"> whose child
+   <p>s carry the prose margins. A page whose standfirst comes from the `lead:`
+   param renders as a bare <p class="lead"> with no children to inherit from, so
+   inside .layout it lost its only gap and sat flush against the first line of
+   the text. Plain pages joined .layout the moment they could ask for the right
+   rail (`toc: true`), which is where this surfaced. */
+.layout p.lead{margin:0 0 18px}
+/* …unless the page asks for the deck back with `lead_deck: true`. A survey or a
+   release write-up opens by SAYING WHAT THIS IS before the piece starts, and
+   that paragraph wants to look like an introduction rather than a first
+   paragraph. Opt-in, because for an ordinary guide — where the standfirst IS the
+   opening sentence — the step in size reads as an accident. The light-scheme
+   line above is restated at this weight for the same reason it exists: secondary
+   on white reads as greyed-out, and a lead must not look weaker than the prose
+   it introduces. */
+.layout .lead.deck{font-size:19px; line-height:1.6; color:var(--text-secondary)}
+[data-scheme="light"] .layout .lead.deck{color:var(--text-primary)}
+/* meta line: quiet metadata between the title and the lead — muted label +
+   emphasized value, borderless (editorial, not a tag cloud), items split by a
+   hairline. -2 top collapses with h1's 18px to a snug 16px (binds it to the
+   title); 18px below lets the lead (or intro) breathe. keeps the .tag class so it
+   also covers the site's meta override, which emits the same markup. the divider
+   is a trailing pseudo (wrap-safe: it stays with the item that ends a line). */
+.meta{display:flex; flex-wrap:wrap; align-items:center; row-gap:8px; column-gap:14px; margin:-2px 0 18px; font-family:var(--font-mono); font-size:12.5px; color:var(--text-muted)}
+.meta .tag{display:inline-flex; align-items:center; gap:5px; line-height:1}
+.meta .tag b{color:var(--text-secondary); font-weight:600; letter-spacing:.01em}
+.meta .tag:not(:last-child)::after{content:""; flex:0 0 auto; width:1px; height:11px; margin-left:9px; background:var(--border)}
+
+hr.sep{border:0; height:1px; background:linear-gradient(90deg, var(--border), transparent); margin:40px 0}

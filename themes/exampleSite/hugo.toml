@@ -1,0 +1,337 @@
+# exampleSite — the theme's demo and its own documentation.
+#
+# This is the SECOND reference config for the theme (the first is the guide
+# site's own hugo.toml). Where the site config shows a real deployment, this one
+# shows a config that ships INSIDE the theme package and is built against the
+# theme in place — so every key is commented for someone reading the theme to
+# learn how to configure their own site.
+#
+# Build it from the repo root (the theme IS this repository):
+#   hugo -s exampleSite --themesDir ../..
+#   pagefind --site exampleSite/public
+# `theme = "taiga"` is resolved under `--themesDir` (the repo's PARENT dir) to a
+# folder named `taiga` — i.e. this repo. Check the repo out as `taiga` for this
+# to work with no install; the demo then builds against the very theme it documents.
+
+# The demo's real home (GitHub Pages, a SUBPATH — not a domain root). It is set
+# here rather than passed with --baseURL so that the subpath is exercised on every
+# build: every URL the theme emits must survive living under /taiga/, and a theme
+# that only works at a domain root is a theme with a bug. `hugo server` overrides
+# this locally, so development is unaffected.
+baseURL = "https://justskiv.github.io/taiga/"
+title = "taiga"                          # brand-neutral: this demo is theme-about-theme
+theme = "taiga"                          # resolved via --themesDir (see header)
+
+# Two languages, and they are the point: the demo is the theme's own proof that
+# multilingual works. English is the default and lives at the root; Russian lives
+# under /ru/. Adding a THIRD language is additive — a [languages.xx] block, an
+# i18n/xx.toml, and content with an .xx.md suffix. No template edits.
+defaultContentLanguage = "en"
+defaultContentLanguageInSubdir = false   # en at /, not /en/
+enableRobotsTXT = true
+
+# Git-derived dates. OFF: the demo builds standalone (and inside the theme repo the
+# exampleSite subdir has no independent history) — with it on and no repo, the
+# build fails. The guide site flips this to true once it lives in git.
+enableGitInfo = false
+
+timeZone = "Europe/Moscow"
+
+# Only Markdown is a renderable content type. Widget figures live as .html
+# page-bundle resources (widgets/<id>/figure.html) that the widget shortcode
+# reads via .Resources.Get; without this, Hugo also treats those .html files as
+# renderable pages, which crashes `hugo server` on edit and makes the resource's
+# .Content go through the HTML renderer instead of staying raw. None of the
+# .html under content/ contains Go template markup, so dropping them as pages is
+# safe.
+[contentTypes]
+  [contentTypes."text/markdown"]
+
+# ── Languages ────────────────────────────────────────────────────────────────
+# Per-language `params` and `menus` override the site-wide ones for that language.
+# Everything NOT repeated here (defaultTheme, featured, rubricSections, …) is
+# shared — a language only restates what actually differs.
+#
+# NB: content pairs by FILE SUFFIX — index.md (en) ↔ index.ru.md (ru). Slugs and
+# tags are deliberately identical across languages, so a page and its translation
+# share a URL path and the switcher can hop between them in place.
+
+[languages]
+
+  [languages.en]
+    languageCode = "en"
+    languageName = "English"
+    weight = 1
+
+    [languages.en.params]
+      # Home intro line, split into a lead clause and a trailing "· …" satellite so
+      # the theme can style them apart. Together they read as one sentence.
+      heroLine = "a theme for learning guides: series, widgets in the text, search — with no node"
+      heroSat = "· and this very demo is built on it"
+      footerTag = "the theme's demo site — every mechanism proven on itself"
+
+    # Main navigation, in order. `params.badge` renders a generic <sup> badge on any
+    # item — here it flags the author-built "Playground" section (β), demonstrating
+    # that the badge is a nav feature, not a marker of a special page type.
+    [[languages.en.menus.main]]
+      name = "How-to"
+      pageRef = "/howto"
+      weight = 10
+    [[languages.en.menus.main]]
+      name = "Inside"
+      pageRef = "/inside"
+      weight = 20
+    [[languages.en.menus.main]]
+      name = "Reference"
+      pageRef = "/reference"
+      weight = 30
+    [[languages.en.menus.main]]
+      name = "Playground"
+      pageRef = "/playground"
+      weight = 40
+      [languages.en.menus.main.params]
+        badge = "β"
+
+    # Footer link row (ordered by weight). The theme renders whatever is listed;
+    # which links and labels are the site's concern, not the theme's.
+    [[languages.en.menus.footer]]
+      name = "how-to"
+      pageRef = "/howto"
+      weight = 10
+    [[languages.en.menus.footer]]
+      name = "inside"
+      pageRef = "/inside"
+      weight = 20
+    [[languages.en.menus.footer]]
+      name = "reference"
+      pageRef = "/reference"
+      weight = 30
+    [[languages.en.menus.footer]]
+      name = "roadmap"
+      pageRef = "/roadmap"
+      weight = 40
+    [[languages.en.menus.footer]]
+      name = "about"
+      pageRef = "/about"
+      weight = 50
+
+  [languages.ru]
+    languageCode = "ru"
+    languageName = "Русский"
+    weight = 2
+
+    [languages.ru.params]
+      heroLine = "тема для учебных гайдов: серии, виджеты в тексте, поиск — без node"
+      heroSat = "· и это демо собрано на ней же"
+      footerTag = "демо-сайт темы — каждый механизм проверен на себе"
+
+    [[languages.ru.menus.main]]
+      name = "Приёмы"
+      pageRef = "/howto"
+      weight = 10
+    [[languages.ru.menus.main]]
+      name = "Устройство"
+      pageRef = "/inside"
+      weight = 20
+    [[languages.ru.menus.main]]
+      name = "Справочник"
+      pageRef = "/reference"
+      weight = 30
+    [[languages.ru.menus.main]]
+      name = "Песочница"
+      pageRef = "/playground"
+      weight = 40
+      [languages.ru.menus.main.params]
+        badge = "β"
+
+    [[languages.ru.menus.footer]]
+      name = "приёмы"
+      pageRef = "/howto"
+      weight = 10
+    [[languages.ru.menus.footer]]
+      name = "устройство"
+      pageRef = "/inside"
+      weight = 20
+    [[languages.ru.menus.footer]]
+      name = "справочник"
+      pageRef = "/reference"
+      weight = 30
+    [[languages.ru.menus.footer]]
+      name = "роадмап"
+      pageRef = "/roadmap"
+      weight = 40
+    [[languages.ru.menus.footer]]
+      name = "о сайте"
+      pageRef = "/about"
+      weight = 50
+
+# One taxonomy: `tags`, for cross-cutting topics. The name matches the site
+# config — the theme reads exactly this key. Series are NOT a taxonomy: a series
+# is a folder, a sub-section of its rubric (content/<rubric>/<series>/), and
+# membership is where the bundle sits.
+[taxonomies]
+  tag = "tags"
+
+[params]
+  # NB: in TOML every scalar key must precede any [params.subtable] — otherwise it
+  # is absorbed into the preceding subtable. Scalars first, tables last.
+  #
+  # These are the LANGUAGE-INDEPENDENT params. The ones that differ per language
+  # (heroLine, heroSat, footerTag) live in [languages.xx.params] above.
+
+  # "Guide of the week" — entry into the handbook series (a content path, not a
+  # URL: it resolves per language). Being a series part, the featured card also
+  # shows "part 1 of 3" and an "all parts" link to the series landing,
+  # exercising that branch.
+  featured = "howto/handbook/get-started"
+
+  # Posts shown before the "N more guides" button. 3 of 9 feed guides visible, so
+  # the reveal control is live in the demo (about/roadmap/playground carry no date
+  # and stay out of the feed).
+  feedInitial = 3
+
+  # Default palette id — one of data/themes/<id>.toml (the theme ships seven). The
+  # "A palette is one file" guide explains how this maps to CSS.
+  defaultTheme = "taiga"
+
+  # Cross-cutting accent (optional). One hex repaints the accent across EVERY
+  # palette at once — links, buttons, active states, the picker's swatch dot, the
+  # favicon square and the logo mark. --accent-dim/-glow derive from it as
+  # rgba(…,.18)/(…,.28); accentDim/accentGlow (also scalars) override them. Left
+  # unset, each palette keeps its native amber — which is what this demo ships.
+  # See docs/customizing.md#recolour.
+  # accent = "#7aa2f7"
+
+  # Meta chip fallback when a guide omits `version`. Here it is the THEME's own
+  # version: the demo documents the theme, and this doubles as a live proof that the
+  # chip is an arbitrary string (see "Covers, search and other build-time magic").
+  versionDefault = "v0.0.1"
+
+  # Broken internal links during build: "error" fails the build, "warn" logs. The
+  # demo keeps it strict so a dead cross-link between guides never ships.
+  linkcheck = "error"
+
+  # Content sections whose leaf pages are full guides (two rails, kicker, meta, TOC,
+  # series bridge). Every other page (about, roadmap, playground, tags) gets the
+  # plain column. Also drives the home rubric cards and the 404 rubric list.
+  # Ordered: howto first (the user manual), then inside (internals), then reference.
+  rubricSections = ["howto", "inside", "reference"]
+
+  # Wordmark in header and footer. Brand-neutral on purpose — the demo is about the
+  # theme, not a subject.
+  [params.brand]
+    name = "taiga"
+    tld = ""
+
+  # No [params.home] here on purpose. The home look — display brand, the backdrop
+  # behind it, boxless rubric tiles — is the theme's own default (its hugo.toml),
+  # so the demo inherits it by writing nothing. That is also the point: what you
+  # see on the demo is what a fresh install renders, not a dressed-up version of
+  # it. Each axis switches off with an empty string; see docs/params.md.
+
+  # NB: there is deliberately NO search toggle. The ⌘K modal is always on and
+  # degrades quietly to an "index not built yet" hint when the Pagefind index is
+  # missing (e.g. a bare `hugo server` with no second build step). A
+  # `[params.search] enable` key used to sit here and was read by nothing.
+
+  [params.ogImages]
+    enable = true                        # generate share images at build time
+    style = "taiga"                      # style = folder name under assets/og/
+
+  [params.rss]
+    fullContent = true                   # full guide body in the feed
+
+  [params.social]
+    twitter = ""                         # @handle for twitter:site (empty = omit)
+    github = "https://github.com/justskiv/taiga"  # repo URL → source icon in the header (unset = no icon)
+
+  # Link previews — ON in the demo so the feature is exercised. budgetWords caps
+  # how much of an article a hover preview shows. telegram.channels whitelists the
+  # author's own channel(s): a t.me post from @ntuzov earns a build-time card,
+  # any other t.me link gets only the ✈ mark. (Demo page: reference/kitchen-sink.)
+  [params.linkPreviews]
+    enable = true
+    budgetWords = 1400
+  [params.telegram]
+    channels = ["ntuzov"]
+
+  # Newsletter — OFF in the theme's own defaults, and deliberately ON here, with
+  # ALL FOUR placements, so every one of them can be seen: the bell in the
+  # header, the link in the footer, the card at the foot of each guide and the
+  # CTA under a series' chapter list. The mid-text block has no flag — it is a
+  # shortcode, demonstrated on the kitchen-sink page. A demo that hid the
+  # feature would document nothing, and this is the only place the theme can
+  # show what it looks like; copying this block into a real site is not enough
+  # on its own — see the three prerequisites in docs/newsletter.md.
+  #
+  # There is no endpoint behind it: the demo is a static site on GitHub Pages,
+  # and /api/subscribe answers nothing. That is deliberate — submitting shows
+  # the failure state, which is a thing worth seeing too. A real site points
+  # `endpoint` at its own proxy (mode = "worker") or, for local development, at
+  # listmonk's public endpoint (mode = "direct" + listUUID). See
+  # docs/newsletter.md.
+  [params.newsletter]
+    enable = true
+    mode = "worker"
+    endpoint = "/api/subscribe"
+    turnstileSiteKey = ""              # empty = no challenge in the browser
+    contactEmail = "hello@example.com" # the error state's way out; see the docs
+    subscribePage = "/subscribe/"
+    [params.newsletter.placements]
+      header = true
+      footer = true
+      articleEnd = true
+      seriesLanding = true
+
+# Tag TERM pages never render (tags link to /tags/#tag), but their data stays
+# available to templates (.GetTerms / term.Pages). The /tags/ list node is
+# kind=taxonomy and unaffected. Series need no such block: a series is a section
+# with a landing page of its own, and it is meant to render.
+[[cascade]]
+  [cascade.build]
+    render = "never"
+    list = "never"
+  [cascade._target]
+    kind = "term"
+
+# Leaf pages: raw bundle resources (widgets.js/.css sources) must not leak into
+# public/ — only pipeline outputs (js.Build/minify/fingerprint) are published.
+[[cascade]]
+  [cascade.build]
+    publishResources = false
+  [cascade._target]
+    kind = "page"
+
+[markup]
+  [markup.goldmark.renderer]
+    unsafe = true                        # guides carry deliberate inline HTML (raw shortcode, kbd)
+  [markup.goldmark.parser.attribute]
+    title = true
+    block = true                         # {.class}/{#id} on block elements and headings
+  [markup.goldmark.extensions.typographer]
+    disable = true                       # « » quotes are typed by hand
+  [markup.highlight]
+    noClasses = false                    # emit Chroma classes; colors come from the palette CSS
+    codeFences = true
+    guessSyntax = false
+  [markup.tableOfContents]
+    startLevel = 2
+    endLevel = 3
+
+[services]
+  [services.rss]
+    limit = 20
+
+# Only the home page carries an RSS feed (/index.xml) — the guide feed. Section,
+# taxonomy and term list pages would otherwise each emit their own index.xml; a
+# single feed is wanted, so RSS is dropped from their outputs. With two languages
+# Hugo emits one feed per language (/index.xml and /ru/index.xml).
+# NB: "preview" on page + section is the link-preview fragment output (the theme
+# declares the format, but a site with its own [outputs] must repeat it — Hugo
+# overrides this map key by key, it does not append). See docs/link-previews.md.
+[outputs]
+  home = ["html", "rss"]
+  section = ["html", "preview"]
+  taxonomy = ["html"]
+  term = ["html"]
+  page = ["html", "preview"]

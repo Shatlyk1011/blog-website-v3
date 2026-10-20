@@ -1,0 +1,34 @@
+{{- /* "Guide of the week": the page named by site.Params.featured, rendered as a
+       big card (kicker links, title, description, two CTAs). The live demo beside
+       it is subject-specific, so the theme only *slots in* a site partial
+       home/featured-demo.html if the site ships one — the theme itself stays free
+       of any Go/content (see modules/featured.js, which reads its data island). */ -}}
+{{- /* No featured param, or an empty/missing path → the card is skipped (guard
+       on the input, not just the resolved page: site.GetPage needs a string). */ -}}
+{{- with site.Params.featured -}}
+{{- with site.GetPage . -}}
+{{- $s := partial "article/series-ctx.html" . -}}
+{{- /* The rubric is optional here too (article/rubric.html): a featured guide
+       from outside the rubrics has no shelf to link to, so the kicker opens on
+       the series or the reading time. The row is a flex `gap`, with no
+       separators of its own, so nothing is left dangling. */ -}}
+{{- $rubric := partial "article/rubric.html" . -}}
+<div class="sec-h">{{ i18n "featured_head" }}</div>
+<section class="featured">
+  <div class="f-body">
+    <div class="f-k">
+      {{ with $rubric }}<a href="{{ .RelPermalink }}">{{ .Params.label | default (lower .Title) }}</a>{{ end }}
+      {{ if $s.isSeries }}<a href="{{ $s.href }}">{{ $s.label }} · {{ i18n "part_of" (dict "N" $s.pos "M" $s.total) }}</a>{{ end }}
+      <span>{{ .Params.mins | default (partial "article/reading-time.html" .) }} {{ i18n "mins_abbr" }}</span>
+    </div>
+    <h2 class="f-t"><a href="{{ .RelPermalink }}">{{ .Title }}</a></h2>
+    <p class="f-s">{{ .Description }}</p>
+    <div class="hero-cta" style="display:flex; gap:12px; flex-wrap:wrap">
+      <a class="btn-cta" href="{{ .RelPermalink }}">{{ i18n "read_guide" }} →</a>
+      {{ if $s.isSeries }}<a class="btn-ghost" href="{{ $s.href }}">{{ i18n "featured_all" }} «{{ $s.term.Title }}»</a>{{ end }}
+    </div>
+  </div>
+  {{- if templates.Exists "_partials/home/featured-demo.html" }}{{ partial "home/featured-demo.html" . }}{{ end }}
+</section>
+{{- end -}}
+{{- end -}}

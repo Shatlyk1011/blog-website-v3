@@ -1,0 +1,129 @@
+{{- /* Hugo → JS bridge: the two things the bundle cannot work out for itself.
+
+       1. The i18n catalogue. modules/i18n.js merges window.THEME_I18N over its
+          own (English) defaults, so without this every JS string — search modal,
+          popover, focus button, minimaps, tags filter — would be frozen in one
+          language. jsonify does the escaping: the strings carry <kbd> markup and
+          quotes, and a hand-rolled object literal would be one apostrophe away
+          from a syntax error.
+
+       2. The Pagefind bundle URL, resolved through baseURL. The hardcoded
+          /pagefind/pagefind.js 404s the moment the site lives on a subpath
+          (project pages), and search dies without a sound.
+
+       3. The URL of the guide manifest behind the search modal's zero state
+          (search/manifest.html) — same reason: the path is fingerprinted in
+          production and lives under baseURL, so only Hugo knows it.
+
+       Rendered LAST in scripts.html — after the foot-extra hook, still before the
+       deferred bundle runs — and merged rather than assigned, so a site that sets
+       window.THEME_I18N from either hook keeps winning key by key.
+
+       searchTotal carries a "{n}" placeholder rather than a number: the search
+       modal counts the guides in the browser (it fetches the manifest there),
+       so Hugo renders the phrase around the hole and modules/search.js fills
+       it. No plural probe for that one — neither "всего N" nor "N in all"
+       inflects.
+
+       Plurals: the tags filter counts posts in the browser, so Hugo can't render
+       the phrase. It renders one word per probe count from its own CLDR catalogue
+       instead, and modules/i18n.js asks Intl.PluralRules — the same CLDR data —
+       which probe shares a category with the real count. Neither side has to know
+       that 5 is "many" in Russian and plain "other" in English. */ -}}
+{{- $i18n := dict
+      "themeHead"         (i18n "js_theme_head")
+      "popoverAria"       (i18n "js_popover_aria")
+      "pinPanel"          (i18n "js_pin_panel")
+      "keyOr"             (i18n "js_key_or")
+      "focusExitTip"      (i18n "js_focus_exit_tip")
+      "focusTitle"        (i18n "js_focus_title")
+      "focusAria"         (i18n "js_focus_aria")
+      "searchAria"        (i18n "js_search_aria")
+      "searchPlaceholder" (i18n "js_search_placeholder")
+      "searchEmpty"       (i18n "js_search_empty")
+      "searchUnbuilt"     (i18n "js_search_unbuilt")
+      "searchRecent"      (i18n "js_search_recent")
+      "searchLatest"      (i18n "js_search_latest")
+      "searchHint"        (i18n "js_search_hint")
+      "searchTotal"       (i18n "js_search_latest_total" (dict "N" "{n}"))
+      "scrollTop"         (i18n "js_scrolltop")
+      "minutes"           (i18n "mins_abbr")
+      "tagFeedHead"       (i18n "js_tag_feed_head")
+      "tagReset"          (i18n "js_tag_reset")
+      "tagEmptyTail"      (i18n "js_tag_empty_tail")
+      "codeEdit"          (i18n "js_code_edit")
+      "codeClose"         (i18n "js_code_close")
+      "codeReset"         (i18n "js_code_reset")
+      "codeHint"          (i18n "js_code_hint")
+      "codeAria"          (i18n "js_code_aria")
+      "copyCode"          (i18n "js_copy_code")
+      "copyDone"          (i18n "js_copy_done")
+      "copyFail"          (i18n "js_copy_fail")
+      "runExample"        (i18n "run_example")
+      "runOk"             (i18n "run_ok")
+      "runFailed"         (i18n "run_failed")
+      "runRestore"        (i18n "run_restore")
+      "runEmpty"          (i18n "run_empty")
+      "guideForms"        (dict
+        "1" (i18n "js_guides_word" 1)
+        "2" (i18n "js_guides_word" 2)
+        "5" (i18n "js_guides_word" 5))
+-}}
+{{- /* Newsletter form strings, only for a site that has the feature on — seven
+       keys are not worth shipping to every other site, and their absence is
+       also the guarantee that a build with newsletter.enable = false carries no
+       trace of it. */ -}}
+{{- if (partialCached "newsletter/cfg.html" . .Language.Lang).enable -}}
+{{- $i18n = merge $i18n (dict
+      "nlMsgEmpty"    (i18n "nl_msg_empty")
+      "nlMsgTypo"     (i18n "nl_msg_typo")
+      "nlMsgFail"     (i18n "nl_msg_fail")
+      "nlMsgFailHint" (i18n "nl_msg_fail_hint")
+      "nlMsgOk"       (i18n "nl_msg_ok")
+      "nlMsgOkHint"   (i18n "nl_msg_ok_hint")
+      "nlAgain"       (i18n "nl_again")
+      "nlSubscribed"    (i18n "nl_subscribed")
+      "nlSubscribedPop" (i18n "nl_subscribed_pop")
+      "nlSubOther"      (i18n "nl_sub_other"))
+-}}
+{{- end -}}
+{{- /* Comment block strings, only for a site that has the feature on — the
+       same rule the newsletter follows above, and for the same reason: sixteen
+       keys on every page of every other site, and their absence here is what
+       makes `comments.enable = false` mean the build carries no trace of it.
+
+       cmntForms / cmntReplyForms are plural PROBES, not words: Hugo owns the
+       CLDR catalogue, so it renders one word per probe count and
+       modules/i18n.js asks Intl.PluralRules which probe shares a category with
+       the real number. Neither side has to know that 5 is "many" in Russian
+       and plain "other" in English. */ -}}
+{{- if (partialCached "comments/cfg.html" . .Language.Lang).enable -}}
+{{- $i18n = merge $i18n (dict
+      "cmntNone"       (i18n "js_cmnt_none")
+      "cmntError"      (i18n "js_cmnt_error")
+      "cmntRetry"      (i18n "js_cmnt_retry")
+      "cmntSortBest"   (i18n "js_cmnt_sort_best")
+      "cmntSortWorst"  (i18n "js_cmnt_sort_worst")
+      "cmntSortOldest" (i18n "js_cmnt_sort_oldest")
+      "cmntSortNewest" (i18n "js_cmnt_sort_newest")
+      "cmntWrite"      (i18n "js_cmnt_write")
+      "cmntSubmit"     (i18n "js_cmnt_submit")
+      "cmntSubmitIn"   (i18n "js_cmnt_submit_in")
+      "cmntReply"      (i18n "js_cmnt_reply")
+      "cmntAuthor"     (i18n "js_cmnt_author")
+      "cmntShow"       (i18n "js_cmnt_show")
+      "cmntLoginTitle" (i18n "js_cmnt_login_title")
+      "cmntLoginWhy"   (i18n "js_cmnt_login_why")
+      "cmntPending"    (i18n "js_cmnt_pending")
+      "cmntRejected"   (i18n "js_cmnt_rejected")
+      "cmntForms"      (dict
+        "1" (i18n "js_cmnt_word" 1)
+        "2" (i18n "js_cmnt_word" 2)
+        "5" (i18n "js_cmnt_word" 5))
+      "cmntReplyForms" (dict
+        "1" (i18n "js_cmnt_reply_word" 1)
+        "2" (i18n "js_cmnt_reply_word" 2)
+        "5" (i18n "js_cmnt_reply_word" 5)))
+-}}
+{{- end -}}
+<script>window.THEME_I18N=Object.assign({{ $i18n | jsonify | safeJS }},window.THEME_I18N||{});window.TAIGA_PAGEFIND={{ "pagefind/pagefind.js" | relURL | jsonify | safeJS }};window.TAIGA_SEARCH_INDEX={{ (partialCached "search/manifest.html" . .Language.Lang) | jsonify | safeJS }};</script>

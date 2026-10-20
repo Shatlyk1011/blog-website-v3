@@ -1,0 +1,23 @@
+{{- /* Meta line: quiet editorial metadata, sits between the title and the lead.
+       "tested on go1.26 · 64-bit", "~14 min", "4,183 words", optional
+       "interactive: …". Each item is a muted label + emphasized value, split by a
+       hairline; the word count is the quietest (all-muted). `version` renders
+       verbatim (e.g. "go1.26", "PostgreSQL 17"), falling back to the site default;
+       arch and the interactive list are optional per-article; mins is authored
+       (fixed, so the line and the series bridge agree) and both fall back to the
+       shared reading-time.html estimate — so the chip and the bridge stay in sync.
+       Class stays .tag (the site's meta override emits it too). */ -}}
+{{- $ver := .Params.version | default site.Params.versionDefault -}}
+<div class="meta">
+{{- /* No version and no site default ⇒ no chip. Rendering it unconditionally left
+       a dangling "tested on" label with an empty <b></b> on every page of a site
+       that never set one. */ -}}
+{{- with $ver }}
+<span class="tag">{{ i18n "meta_tested_on" }} <b>{{ . }}</b>{{ with $.Params.arch }} · {{ . }}{{ end }}</span>
+{{- end }}
+<span class="tag">~<b>{{ .Params.mins | default (partial "article/reading-time.html" .) }} {{ i18n "mins_abbr" }}</b></span>
+<span class="tag tag-quiet">{{ i18n "words" .WordCount }}</span>
+{{- with .Params.interactive }}
+<span class="tag"><b>{{ $.Params.interactive_label | default (i18n "meta_interactive") }}:</b> {{ . }}</span>
+{{- end }}
+</div>
